@@ -576,29 +576,25 @@ Later, in 2008 Víctor Sucasas also studied an anonymous credential system with 
 
 In 2009, some Java smart card PoC for Idemix were developed in \cite{javaIdemix1} and \cite{javaIdemix2}, but they weren't optimal and didn't include some Idemix's functionalities, like selective disclosure.
 
-Later, in 2013, Vullers and Alpar, implemented an efficient smart card for Idemix \cite{vullers2013efficient}, aiming to integrate it in the IRMA\footnote{The IRMA project has been recently included in the Privacy by Design Foundation: \url{https://privacybydesign.foundation/}} project, and comparing the performance with U-Prove's smart cards. This new implementation was written in C, under the MULTOS platform for smart cards, and describes many decisions made during the development to improve the performance on such constrained devices. The terminal application was written in Java and used an extension of the Idemix cryptographic library to take care of the smart card specifics.
+In 2013, Vullers and Alpar, implemented an efficient smart card for Idemix \cite{vullers2013efficient}, aiming to integrate it in the IRMA\footnote{The IRMA project has been recently included in the Privacy by Design Foundation: \url{https://privacybydesign.foundation/}} project, and comparing the performance with U-Prove's smart cards. This new implementation was written in C, under the MULTOS platform for smart cards, and describes many decisions made during the development to improve the performance on such constrained devices. The terminal application was written in Java and used an extension of the Idemix cryptographic library to take care of the smart card specifics.
 
 
-Extending the concept of smart cards, physical or logical, as holders of the credentials, the ABC4Trust's project, P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}}, was created as a unified ABC system for different cryptographic engines, currently supporting U-Prove and Idemix. The Idemix library was updated to support P2ABCE and the last version is interoperable with U-Prove. Therefore, the smart card specification from the P2ABCE project could be considered the official version to work with.
+% The Privacy-ABC Engine language framework acts as an abstraction layer on top of the cryptographic routines of IBM Identity Mixer and Microsoft U-Prove, allowing application developers to use the technology without needing to understand the cryptographic details.
+
+Later, the P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}}, a language framework that unifies different cryptographic ABC engines, currently supporting U-Prove and Idemix, extended the concept of smart cards, physical or logical, as holders of the credentials. The Idemix library was updated to support P2ABCE and their last version is therefore interoperable with U-Prove. The smart card specification from the P2ABCE project could be considered the official version to work with.
 
 
 % Uso de P2ABCE en VANETs
-Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit), with constrained hardware, could act as a User in an P2ABC system \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware actually used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
+Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit), with constrained hardware, could act as a User in an P2ABC system \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware equivalent to that used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
 
 %%%%%%%%%%%%%%
 
 
 
 
+\section{Design}\label{ch:design}
 
-
-
-\section{Design and implementation}\label{ch:design}
-
-
-We now proceed describe the design of our proposal to integrate IoT constrained devices as part of the privacy preserving system P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User role, interacting autonomously in order to authenticate and demonstrate their credential attributes in a privacy-preserving fashion.
-
-\subsection{Design}
+We now proceed to describe the design of our proposal to integrate IoT constrained devices as part of the privacy preserving system P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User role, interacting autonomously in order to authenticate and demonstrate their credential attributes in a privacy-preserving fashion.
 
 In this section we will define how an IoT device may be integrated in the P2ABCE architecture, being totally compatible with any other system using P2ABCE, addressing the power and memory constrains many IoT devices face.
 
@@ -608,11 +604,13 @@ Our main goal is to make an IoT device capable to act as a User or Verifier in t
 
 The communication between actors depends on each IoT scenario, it can be achieved with many existing standard solutions, e.g. an IP network, a Bluetooth M2M connection, RF communication, etc.
 
+We also analysed how the P2ABCE architecture uses the logic of smart cards to gather the cryptographic operations independently from how the data is exchanged between P2ABCE actors.
+
 Our real concerns are, on one side, parsing the XML data, based on the P2ABCE's XML schema, that specifies the data artifacts created and exchanged during the issuance, presentation, revocation and inspection of pABCs; and on the other side, the cryptographic operations, that involve the use of secret keys, stored privately in the IoT device.
 
-After the analysis done in the previous sections to the P2ABCE architecture, emphasizing that the logic of smart cards gathers the cryptographic operations independently from how the data is exchanged between P2ABCE actors. 
+%After the analysis done in the previous sections to the P2ABCE architecture, emphasizing that the logic of smart cards gathers the cryptographic operations independently from how the data is exchanged between P2ABCE actors.
 
-Using the \textit{computation offloading} technique to our scenario, our design consists on implementing the smart card logic inside the IoT device, keeping secure our master key and credentials, and for the rest of the P2ABCE system, if the device can not run the complete Engine, it may delegate to a server running it, indicating how to send APDU Commands to the \textit{IoT smart card}.
+Using the \textit{computation offloading} technique to our scenario, our design consists on implementing the smart card logic inside the IoT device, keeping safe our master key and credentials, and for the rest of the P2ABCE system, if the device can not run the complete Engine, it may delegate to a server running it, indicating how to send APDU Commands to the \textit{IoT smart card}.
 
 Even in the case we were to implement all P2ABCE inside an IoT device, we would have to implement the support for software smart cards, to keep the secret inside the IoT device. Therefore, we can begin implementing the smart card logic inside the IoT device, and later, if the device resources admit it, other components of the P2ABCE project.
 
@@ -623,7 +621,7 @@ Computation offloading is not new to IoT deployments. For example, IPv6 involves
 
 Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it's also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and the P2ABCE server delegates on the IoT, acting now as a smart card, for the cryptography.
 
-\subsubsection{System architecture}
+\subsection{System architecture}
 
 
 
@@ -674,11 +672,13 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 	
 \end{itemize}
 
-\hfil
+%\hfil
+%
+%\begin{flushleft}
+%	\textbf{Delegation process}
+%\end{flushleft}
 
-\begin{flushleft}
-	\textbf{Delegation process}
-\end{flushleft}
+\subsection{Delegation process}
 
 Here we describe the computation offloading carried out by the IoT device.  In \autoref{fig:DelegationProving} we show an example of the IoT acting as a User, Proving a Presentation Policy to a third party Verifier.
 
@@ -729,7 +729,7 @@ In these cases, the delegation in the server goes a step forward, making the ser
 
 
 
-\subsection{Proof of Concept Implementation}
+\section{Proof of Concept Implementation}
 % +Implementation:
 % *System:
 % 	-Raspbian OS: distro de debian para Raspberry Pi, que se describirá en los tests
@@ -746,77 +746,47 @@ In these cases, the delegation in the server goes a step forward, making the ser
 
 In this section we present the first PoC implementation, introducing the IoT system where we are going to work, then we will describe the delegation protocols, one for the computation offloading of the IoT device on the P2ABCE server, and another for the transmission of APDU Commands, and finally, we will describe the IoT smart card implementation.
 
+We will develop our PoC in Linux based systems aimed for IoT environments, that will serve as a starting point for future implementations in more constrained devices or different systems.
 
-
-\subsection{IoT system}
-
-We will develop our PoC in Linux based systems in order to avoid complications with firmware specific issues that we are not familiar with. Even so, the linux systems used are aimed for the IoT environment and serve as a starting point for future implementations in more constrained devices or different systems.
-
-In our delegation server we will run Raspbian OS, a distribution based on Debian for the Raspberry Pi. For our IoT device, we will use LEDE, Linux Embedded Development Environment, a distribution forked from OpenWrt, aimed for routers and embedded chips with low resources requirements.
+In our delegation server we will run Raspbian OS in a Raspberry Pi3, and for our IoT device, we will use LEDE, Linux Embedded Development Environment, a distribution forked from OpenWrt, aimed for routers and embedded chips with low resources requirements.
 
 
 
 \subsection{PoC Delegation}
 
-As we explained in the design section, the delegation has two steps, the IoT device calling the P2ABCE server to offload the parsing of the XML data, and the P2ABCE server sending APDU Commands to the IoT smart card in the device.
+The delegation process has two steps, first the IoT device calls the P2ABCE server to offload the parsing of the XML data, and then the P2ABCE server sending APDU Commands to the IoT smart card in the device.
 
 
 \subsubsection{PoC Delegation to the P2ABCE Server}
 
 
-Currently P2ABCE offers multiple REST web services to run different roles in P2ABCE system: User Service, Issuer Service, Verification Service, etc. Any third party application that integrates P2ABCE with their system can make use of these services or implement the functionality using the library written in Java, the tool that the REST services actually use.
+Currently P2ABCE offers multiple REST web services to run different roles in P2ABCE system: User Service, Issuer Service, Verification Service, etc. 
+%Any third party application that integrates P2ABCE with their system can make use of these services or implement the functionality using the library written in Java, the tool that the REST services actually use.
+%
+%In this PoC, the P2ABCE's User Service needed to be modified, because this is the role the IoT device plays. We added the following REST call:
+%\begin{center}
+%	\textit{/initIoTsmartcard/{issuerParametersUid}?host=\&port=}
+%\end{center}
+%where we communicate the P2ABCE server that an IoT Smart Card is accessible via the IP address \textit{host} and TCP port \textit{port}.
+After an analysis of P2ABCE's code, the \texttt{HardwareSmartcard} class implements the \texttt{Smartcard} interface using the package of abstract classes \texttt{javax.smartcardio} to communicate with the physical smart cards. The Oracle JRE implements these package for the majority of smart card manufacturers. For our PoC, we implement the \texttt{javax.smartcardio} package so it transmits the APDUs with our custom protocol, making the use of a physical or IoT smart card totally transparent to the \texttt{HardwareSmartcard} class, enhancing maintainability, and following the \textit{expert pattern} from the known GRASP guidelines.
 
-In this PoC, only the P2ABCE's User Service needed to be modified, because this is the role the IoT device plays. We added the following REST call:
-\begin{center}
-	\textit{/initIoTsmartcard/{issuerParametersUid}?host=\&port=}
-\end{center}
-where we communicate the P2ABCE server that an IoT Smart Card is accessible via the IP address \textit{host} and TCP port \textit{port}. Then a new \textit{HardwareSmartcard} object is stored in the P2ABC Engine, but instead of the \textit{javax.smartcardio} Oracle's \textit{CardTerminal} implementation, we use our own \textit{IoTsmartcardio} implementation for the \textit{HardwareSmartcard} constructor, that we will discuss in the following section.
+In this PoC, the P2ABCE's User Service was modified to add a new method receiving the IoT device's  IP address and a port where the IoT Smart Card will be listening for the APDU Commands.
+This method creates a new \textit{HardwareSmartcard} object, but instead of the \textit{javax.smartcardio} Oracle's \textit{CardTerminal} implementation, we use our own \textit{IoTsmartcardio} implementation for the \textit{HardwareSmartcard} constructor.
 
+
+The remaining REST methods are left untouched, and will serve to parse the XML files exchanged.
 
 \hfil
-
-%In a real deployment, we would offer a full library with an API for other processes that want to use the P2ABC Engine, which automatizes the boot of the IoT smart card and handles the security policies, like the one we presented in the deployment diagram \ref{fig:P2ABCE-IoT} of the \textit{P2ABCE IoT Toolkit}.
-
-%Now we show some examples of the PoC \texttt{curl} commands, run in the device's terminal, or from a shell script for automation:
-%
-%\begin{lstlisting}[language=bash]
-%$ curl -X POST --header 'Content-Type: text/xml' "http://$DelegationServerIP:9200/user/initIoTsmartcard/http%3A%2F%2Fticketcompany%2FMyFavoriteSoccerTeam%2Fissuance%3Aidemix?host=192.168.3.1&port=8888"
-%
-%$ curl -X POST --header 'Content-Type: text/xml' -d @firstIssuanceMessage.xml "http://$DelegationServerIP:9200/user/issuanceProtocolStep/" > issuanceReturn.xml
-%\end{lstlisting}
-
-%The IoT device will only manage XML as data files to exchange between the third party actor and the P2ABCE delegation service, attaching them in the body of the REST call. In the parameters of the first call we can see the IP and port where the IoT smart card will be listening.
-
-
 
 \subsubsection{APDU Dialogue Transmission}
 
 
-To transmit the APDU messages in our PoC we use a simple protocol, that we will refer as BIOSC (Basic Input Output Smart Card), consisting in one first byte for the instruction.
-In the first instruction, we read two header bytes with the length of the APDU Command or Response to receive, followed by said APDU bytes. The message is sent over TCP for a reliable transmission (concept of session, packet retransmission, reordering, etc.). The second instruction serves for closing the TCP socket in the IoT device when the smart card is no longer needed.
+To transmit the APDU messages in our PoC we use a simple protocol, that we will refer as BIOSC (Basic Input Output Smart Card). It consists on one byte for the instruction, that can mean either an APDU Commnad or a finishing instruction to close the connection.
 
-We lack any security (authentication or authorization) that a real system should implement. It is vital to authenticate the delegation service, to authorize it to make APDU Commands, and the same with the IoT device, to prevent attacks. But using this method for the transmission of the APDU messages, with only 3 bytes of overhead, helps us in the  benchmarks to measure the real performance of the system.
+In the first case, the header continuous with two more bytes for the length of the payload bytes to read, which are the APDU Command bytes.
+To send an APDU Response in BIOSC, the IoT device sends back to the server two bytes for the length and then the raw APDU Response bytes. The messages are sent over TCP for a reliable transmission.
 
-
-\hfil
-
-
-The implementation of this simple protocol is done in Java for the P2abce delegation server and in C for the IoT smart card device.
-
-
-
-\hfil
-
-After an analysis of P2ABCE's code, the \texttt{HardwareSmartcard} class implements the \texttt{Smartcard} interface using the package of abstract classes \texttt{javax.smartcardio} to communicate with the physical smart cards. The Oracle JRE implements these package for the majority of smart card manufacturers. For our PoC, we implement the \texttt{javax.smartcardio} package so it transmits the APDUs with BIOSC, making the use of a physical or IoT smart card totally transparent to the \texttt{HardwareSmartcard} class, enhancing maintainability, and following the \textit{expert pattern} from the known GRASP guidelines.
-
-%TODO : optional: diagrama secuencia de P2ABCE, pero si eso solo de la reimplementación de javax.smartcardio y su uso por HardwareSmartcard
-
-\hfil
-
-
-In our PoC, we implement in \texttt{BIOS.c} the \texttt{main()} function, which reads from a Json file the status of the smart card (keys, credentials, ...), and then opens the TCP socket in the $8888$ port, and loops listening for BIOSC transmissions until an $0xff$ is received. When an APDU Command is sent, it calls the APDU Handler, that we will talk about below.
-
-
+We lack any security (authentication or authorization) that a real system should implement. It is vital to authenticate the delegation service, to authorize it to perform APDU Commands, and the same with the IoT device, to prevent impersonation attacks. But using BIOSC for the transmission of the APDU messages in the PoC, with only 3 bytes of overhead, helps us in the  benchmarks to measure the real performance of the system.
 
 
 \subsection{IoT Smart Card Implementation}
