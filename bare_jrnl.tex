@@ -589,7 +589,7 @@ Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote
 
 %%%%%%%%%%%%%%
 
-
+% TODO CRYPTO
 
 
 \section{Design}\label{ch:design}
@@ -621,8 +621,9 @@ Computation offloading is not new to IoT deployments. For example, IPv6 involves
 
 Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it's also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and the P2ABCE server delegates on the IoT, acting now as a smart card, for the cryptography.
 
-\subsection{System architecture}
 
+
+\subsection{System architecture}
 
 
 \begin{figure}[bth]
@@ -707,7 +708,7 @@ Here we describe the computation offloading carried out by the IoT device.  In \
 
 \begin{figure}[bth]
 	\begin{center}
-		\includegraphics[width=\linewidth]{gfx/UML/DelegationProving}
+		\includegraphics[width=0.9\linewidth]{gfx/UML/DelegationProving}
 	\end{center}
 	\caption{Designed interactions exchanged during the IoT delegation for P2ABCE Proving operation.}
 	\label{fig:DelegationProving}
@@ -716,7 +717,7 @@ Here we describe the computation offloading carried out by the IoT device.  In \
 Transmissions over the \textit{Server-IoT} channel must be secured in order to avoid attacks like: impersonate the P2ABCE delegation server, having access to the IoT smart card sending the APDU Commands the attacker wishes; delegate as a device on the server but giving the parameters of another device, making the delegation server send the APDU Commands to a victim IoT smart card.
 
 
-We could use a corporative PKI to issue certificates to the server and devices and configure policies for access control; design a challenge-response system combined with the smart card PIN, like a password and TOTP\footnote{Time-based One-time Password} in a 2FA\footnote{Two-factor authentication} login. We also could connect physically the delegation service through RS-232 serial to the IoT device, securing both physically as we would do with the IoT device on its own, isolating the delegation system from any network attack. This last idea is an approximation to the Arduino Yún\footnote{\url{https://www.arduino.cc/en/Main/ArduinoBoardYun}}, a development board that integrates two microcontrollers, one a typical Arduino with very low resources, and another one running a fork of OpenWrt. The Arduino microcontroller can control the terminal of the more powerful one, using the serial pins as commented before.
+We could use a corporative PKI to issue certificates to the server and devices and configure policies for access control; design a challenge-response system combined with the smart card PIN, like a password and TOTP\footnote{Time-based One-time Password} in a 2FA\footnote{Two-factor authentication} login. We also could connect physically the delegation service through RS-232 serial to the IoT device, securing both physically as we would do with the IoT device on its own, isolating the delegation system from any network attack. This last idea is an approximation to the Arduino Y\'un\footnote{\url{https://www.arduino.cc/en/Main/ArduinoBoardYun}}, a development board that integrates two microcontrollers, one a typical Arduino with very low resources, and another one running a fork of OpenWrt. The Arduino microcontroller can control the terminal of the more powerful one, using the serial pins as commented before.
 
 As we can see, there are many state of the art solutions for all this threads, therefore, we can assume a secure channel without mentioning a specific solution, providing freedom to choose the most fitting one in a real deployment.
 
@@ -791,23 +792,13 @@ We lack any security (authentication or authorization) that a real system should
 
 \subsection{IoT Smart Card Implementation}
 
-
-After many design decisions in the process to adapt the original ABC4Trust Card Lite code to pure C, working on a MIPS architecture, in this section, we present the current PoC code, most important decisions taken and the execution workflow in the form of sequence diagrams.
-
+In this section we present the code architecture and sequence diagram of the IoT Smart Card PoC, based on ABC4Trust's Card Lite.
 
 \hfil
 
-
-
-\subsubsection{Code structure}
-
-
+\textsc{Code structure}
 We divide the project in three different sections with the objective of enhancing maintainability, improving future changes, ports, fixes, etc.
-
-In \autoref{fig:IoTCScomponents-bw} we show the project's structure. The first section is what could be called as the core of the smart card, the second one the interface for those tools the core needs and that may depend on the target's platform, and finally, the third party libraries, that may be empty if the interfaces implementation doesn't require any.
-
-
-
+In \autoref{fig:IoTCScomponents-bw} we show how the project is structured in three sections:
 
 %\begin{figure}[bth]
 %	\begin{center}
@@ -828,42 +819,33 @@ In \autoref{fig:IoTCScomponents-bw} we show the project's structure. The first s
 
 \hfil
 
-\textbf{Core smart card}
+\textbf{Core smart card:} The smart card logic lies here, with the concepts of APDU Commands, the instructions that are defined for P2ABCE smart cards, and how to process them and generate proper APDU Responses.
+
+Here we adapted the ABC4Trust Card Lite's code. However, the ABC4Trust's code heavily depends on the MULTOS platform, therefore, we reimplement the used MULTOS functions following the documentation, adapting it in some cases for \textit{expanded functionality}, to avoid some MULTOS API limitations, like in \cite{vullers2013efficient}, when they noted that MULTOS' \texttt{ModularExponentiation}  function does not accept exponents larger than the modulus size, so they implemented \texttt{SpecialModularExponentiation}.
+
+MULTOS compiler does not apply data structure alignment. This affects the inherited ABC4Trust's code because of the use of \texttt{memcpy} to copy multiple variables in one call.%, for example, the APDU Command payload usually includes multiple data, and instead of copying one variable at a time, the \texttt{struct} is defined with the same order and copies everything at once.
+
+The temporal solution is to use \texttt{struct \_\_attribute\_\_((\_\_packed\_\_))} to ask a GCC compiler to not use padding in the structs, but this is not standard, neither a good practice. A deeper refactorization of the code is needed where the hidden copies of variables must be made explicit, letting the compiler manage the memory layout on its own.
+
 \hfil
 
-The smart card logic lies in this section, the concepts of APDU Commands, what instructions are defined for P2ABCE smart cards, and how to process them and generate proper APDU Responses.
+\textbf{Interfaces:} To reimplement some of the MULTOS functions, we defined a facade to isolate the implementation of the core smart card from our different options, that could vary depending on the hardware or the system used by the IoT device.
+With this facade we could, for example, change the implementation of cryptographic functions with a hardware implementation (e.g. Atmel's chips for SHA and AES), or software implementations optimised for the target platform.
 
-Most of the original ABC4Trust Card Lite's code has been reused in this section, e.g., all the global variables and custom data type definitions, the APDU Command handling and auxiliary subroutines.
+The interfaces defined can be organized in 5 groups (see \autoref{fig:IoTCScomponents-bw}), depending on their purpose: Modular Arithmetic, Cryptography, Memory Management, Serialization and APDU Parsing.
 
-However, the ABC4Trust's code heavily depended on the MULTOS platform for the input and output of data, modular arithmetic, memory management, and AES128 and SHA256 cryptographic operations. Therefore, we reimplement the used MULTOS functions following the documentation, adapting it in some cases for \textit{expanded functionality} when needed, like in \cite{vullers2013efficient} when they noted that MULTOS' \texttt{ModularExponentiation}  function does not accept exponents larger than the modulus size, so they implemented \texttt{SpecialModularExponentiation}.
+\hfil
 
-In MULTOS, to reduce the memory usage, the MULTOS compiler does not apply padding between variables in the data structures, i.e., data structure alignment\footnote{\url{https://en.wikipedia.org/wiki/Data_structure_alignment}}.
-This affects the inherited ABC4Trust's code because of the use of \texttt{memcpy} to copy zones of memory from one address to another. The problem is the code copies multiple variables in one \texttt{memcpy} call, because, for example, the APDU Command payload includes multiple data, and instead of copying one variable at a time, the \texttt{struct} is defined with the same order and copies everything at once.
-
-The temporal solution is to use \texttt{struct \_\_attribute\_\_((\_\_packed\_\_))} to ask a GCC compiler to not use padding in the structs, but this is not standard, neither a good practice. A deeper refactorization of the code is needed where the hidden copies of variables are made explicit, letting the compiler manage the memory layout.
-
-
-
-\textbf{Interfaces}\hfil
-
-To reimplement some of the MULTOS functions, we needed to use some libraries, so we defined a facade to isolate the implementation of the core smart card from our different options, that could vary depending on the hardware or the system used by the IoT device.
-
-The use of a facade lets us, for example, change the implementation of modular arithmetic with a hardware optimized version, or a future more lightweight library, or our very own software implementation using the same data types that the core uses, minimizing the data usage.
-
-The interfaces defined can be organized in 5 groups (see \autoref{fig:IoTCScomponents-bw}), depending on their purpose: Modular Arithmetic, Cryptography, Memory Management, Serialization, APDU Parsing.
-
-
-\textbf{External utilities}\hfil
-
-In our PoC, we use two ANSI C libraries, for base64 and JSON, and two shared libraries available in as packages in LEDE, GMPLib and OpenSSL. These libraries use dynamic memory and offer more functionality than we need, although they are a good tool in this PoC, future versions should use more lightweight solutions, optimized fo the target device.
+\textbf{External utilities:} In our PoC we used two ANSI C libraries, for base64 and JSON, and two shared libraries available as packages in LEDE: GMPLib and OpenSSL. These libraries use dynamic memory and offer more functionality than we need, and although they are useful tools for the early development versions of the PoC, future versions should use more lightweight solutions.
 
 \hfil
 
 The \textit{interfaces} and \textit{external utilities} sections  allow that the project is easily ported to specific targets without modifying the smart card logic.
 
 
+\hfil
 
-\subsubsection{Execution workflow}
+\textsc{Execution workflow}
 
 The sequence diagram from \autoref{fig:sequenceBIOSC} shows the execution of the PoC IoT smart card.
 
@@ -883,11 +865,11 @@ The program starts with the \texttt{main} function in BIOSC, that deserializes t
 
 Every time an APDU Command arrives, it calls the function \texttt{handle\_APDU()} with the raw APDU bytes. The Handler calls the APDU I/O interface to parse the bytes, storing in global variables the APDU structure. Using a \texttt{switch-case} expression on the \texttt{INS} byte, the Handler calls an \textit{Instruction handler} function.
 
-Inside this function, it may call multiple functions from the Subroutines, that may call MULTOS C-API functions, Which in turn may use an interface to perform its functionality.
+Inside this function, it may call multiple functions from the Subroutines, that may call MULTOS C-API functions, which, in turn, may use an interface to perform its functionality.
 
 Finally, every instruction handler must end, before the \texttt{return;} expression, with a call to \texttt{mExit}. This reimplemented MULTOS function will save the current status of the smart card and send the APDU Response back to the delegation server.
 
-After returning from the functions \texttt{mExit}, instruction handler and APDU handler, the program listens again from the socket.
+After returning from these functions, \texttt{mExit}, the instruction handler and the APDU handler, the program listens again from the socket.
 
 
 
@@ -895,7 +877,7 @@ After returning from the functions \texttt{mExit}, instruction handler and APDU 
 \section{Validation and Performance Evaluation}\label{ch:validation}
 %************************************************
 
-In this section, we will describe the deployment of three testing scenarios: a laptop, a Raspberry Pi 3, and a Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution is feasible or must be submitted to revision.
+In this section, we will describe the deployment of three testing scenarios: a laptop, a Raspberry Pi 3, and an Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution runs as expected and is feasible.
 
 \subsection{Testbed description}
 
@@ -905,7 +887,7 @@ First, we shall describe the example Attribute Based Credential system in use. T
 
 To test the correct execution of the \textit{IoT smart card}, we will use the ABC system from the tutorial in the P2ABCE Wiki\footnote{\url{https://github.com/p2abcengine/p2abcengine/wiki/}}. It is based on a soccer club, which wishes to issue VIP-tickets for a match. The VIP-member number in the ticket is inspectable for a lottery, ie. after the game, a random presentation token is inspected and the winning member is notified.
 
-First the various entities are \textbf{setup}, where several artifacts are generated and distributed. Then a ticket credential containing the following attributes is issued:
+First go through the \textbf{setup} phase, where several artifacts are generated and distributed to the various P2ABCE entities. Then a ticket credential containing the following attributes is issued:
 
 \begin{verbatim}
 First name: John
@@ -917,18 +899,14 @@ Matchday: 2013-08-07Z
 
 During \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
 
-Then \textbf{presentation} is performed. The \textit{presentation policy} specifies that the member number is inspectable and a predicate ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used.
-
-The ticket holder was lucky and his presentation token was chosen in the lottery. The presentation token is therefore inspected.
-
+Then \textbf{presentation} is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used.
 
 \hfil
 
 \subsubsection{Execution environment}
 
-First we will execute the test in our development machine (laptop). After asserting that the services work as expected, we then run the test in a Raspberry Pi 3\footnote{\url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}}, exactly like in the laptop. Finally, we will deploy the IoT smart card in a Omega2\footnote{\url{https://docs.onion.io/omega2-docs/omega2.html}} and the delegation services in the Raspberry Pi 3. After every test, we checked that the issuing and proving were successful, in case a cryptographic error appeared in the implementation. 
-
-A downside of using the Omega2 is the lack of hardware acceleration for cryptographic operations, unlike the MULTOS applications, because the smart cards hardware and MULTOS API include support for such common operations in smart cards.
+First we will execute the test in our development machine (laptop). After asserting that the services work as expected, we then run the test in a Raspberry Pi 3\footnote{\url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}}, exactly like in the laptop. Finally, we will deploy the IoT smart card in an Omega2\footnote{\url{https://docs.onion.io/omega2-docs/omega2.html}} and the delegation services in the Raspberry Pi 3. After every test, we checked that the issuing and proving were successful, in case a cryptographic error appeared in the implementation.
+A downside of using the Omega2 is the lack of hardware acceleration for cryptographic operations, unlike the MULTOS smart cards.
 
 
 
