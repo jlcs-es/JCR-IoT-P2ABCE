@@ -168,6 +168,8 @@
 % version and documentation can be obtained at:
 % http://www.ctan.org/pkg/amsmath
 
+\usepackage{amssymb}
+
 
 
 
@@ -479,45 +481,41 @@ In this paper we design a solution to integrate IBM's Identity Mixer into the Io
 
 \section{Introduction}
 
-The IoT is a term with a wide range of interpretations \cite{Atzori20102787}, breafly, we can think of it as billions of devices, mainly resource constrained, that are interconnected between them, and the Internet, in order to achieve a goal.
+Internet of Things is a term with a wide range of interpretations \cite{Atzori20102787}, breafly, we can think of it as billions of devices, mainly resource constrained, that are interconnected between them, and the Internet, in order to achieve a goal.
 
 Many of this objectives require the use of a great amount of data, and thanks to organizations like WikiLeaks, people are aware of the implications of their data on the Internet, demanding more security and privacy for it. This includes not only the data shared with others, where one must trust they will keep it safe, but it's also the data collected about us and that we don't have direct control over it.
 
-In traditional M2M (Machine to Machine) environments the issues about security and privacy have already been treated deeply, but in the IoT world, due to it's recent and fast growth, lacks of those tools to solve autonomously these problems.
+In traditional M2M (Machine to Machine) environments the issues about security and privacy have already been treated deeply, but in the IoT world, due to it's recent and fast growth, it lacks of those tools to solve autonomously these problems.
 
-With the proliferation of IoT devices gathering as much information as they can with their sensors, the amount of data stored about anyone can be immense. And IoT has proved to not address neither security nor privacy, with recent events like the Mirai botnet DDoS attack on October 2016, considered the biggest DDoS in history \cite{jeyanthi:2017}, or the multiple vulnerabilities affecting house devices, like baby monitors \cite{rapid7babycam}.
+To address these problems of privacy in the Internet, a recent approach is the concept of \textit{strong anonymity}, that conceals our personal details while letting us continue to operate online as a clearly defined individuals \cite{stronganonymity}. To achieve it, we must address a way to perform authentication and authorization in the most privacy-friendly approach. Attribute-based credentials and \textit{selective disclosure} allow us to control what information we reveal, under a trusted environment.
 
-To address this problem of privacy in the Internet, a recent approach is the concept of \textit{strong anonymity}, that conceals our personal details while letting us continue to operate online as a clearly defined individuals \cite{stronganonymity}. To achieve it, we must address a way to perform authentication and authorization in the most privacy-friendly approach. Attribute-based credentials and \textit{selective disclosure} allow to control what information we reveal, under a trusted environment.
-
-Intuitively, an attribute-based credential can be thought of as a digital signature by the Issuer on a list of attribute-value pairs, e.g. the list \texttt{(fname=Alice, lname=Anderson, bdate=1977-05-10, nation=DE)} \cite{introCredIBM}.
-The most straightforward way for the User to convince a Verifier of her list of attributes would be to simply transmit her credential to the Verifier.
-With anonymous credentials, the User never transmits the credential itself, but rather uses it to convince the Verifier that her attributes satisfy certain properties – without leaking anything about the credential other than the shown properties. This has the obvious advantage that the Verifier can no longer reuse the credential to impersonate \texttt{Alice}. Another advantage is that anonymous credentials allow the User to reveal a selected subset of her attributes.
-Stronger even, apart from showing the exact value of an attribute, the User can even convince the
+Intuitively, an attribute-based credential can be thought of as a digital signature by the Issuer on a list of attribute-value pairs \cite{introCredIBM}.
+The most straightforward way for the user to convince a Verifier of her list of attributes would be to simply transmit her credential to the Verifier.
+With anonymous credentials, the user never transmits the credential itself, but rather uses it to convince the Verifier that her attributes satisfy certain properties – without leaking anything about the credential other than the shown properties. This has the obvious advantage that the Verifier can no longer reuse the credential to impersonate the user. Another advantage is that anonymous credentials allow the user to reveal only a subset of her attributes.
+Stronger even, apart from showing the exact value of an attribute, the user can even convince the
 Verifier that some complex predicate over the attributes holds, e.g. that her birth date was more than 18 years ago, without revealing the real date.
 
 With usual symmetric and asymmetric cryptography it seems rather impossible to create such credentials, without an explosion of signatures over every possible combination. For this reason, current solutions rely on  Zero-Knowledge Proofs (ZKP), cryptographic methods that allow to proof knowledge of some data without disclosing it.
 
-To understand how ZKPs work, in 1990 Guillou, Quisquater and Berson published in \textit{How to Explain Zero-Knowledge Protocols to Your Children} \cite{ZKPcave:story} a story about how Ali Baba proved that he knew the magic words to open the cave, but without revealing those words to anyone.
-
-Based on ZKP properties, IBM has developed the Identity Mixer\footnote{Identity Mixer - \url{https://www.research.ibm.com/labs/zurich/idemix/}}, Idemix for short, protocol suite for privacy-preserving authentication and transfer of certified attributes. It allows user authentication without divulging any personal data. Users have a personal certificate with multiple attributes, but they can choose how many to disclose, or only give a proof of them, like being older than 18 years-old, living in a country without revealing the city, etc. Thus, no personal data is collected that needs to be protected, managed, and treated.
+Based on ZKPs, IBM has developed Identity Mixer\footnote{Identity Mixer - \url{https://www.research.ibm.com/labs/zurich/idemix/}}, Idemix for short, a protocol suite for privacy-preserving authentication and transfer of certified attributes. It allows user authentication without divulging any personal data. Users have a personal certificate with multiple attributes, but they can choose how many to disclose, or only give a proof based on their values, like living in a country without revealing the city in the credential. Thus, no personal data is collected that needs to be protected, managed, and treated.
 
 \begin{center}
-	\textit{``If your personal data is never collected, it cannot be stolen.''}
+	\textit{``If your personal data is never collected, it cannot be stolen.''} -- Maria Dubovitskaya
 \end{center}
 
 %%%
-So far, Idemix or privacy-ABCs have been successfully applied to deal with traditional Internet scenarios, in which users can authenticate and prove their attributes against Service provider. However, due to the reduced computational capabilities of certain IoT devices, it has not been yet considered for IoT scenarios. As we study in the state of the art chapter, current implementations are based on Java, which requires high computational and memory resources to be executed, and to the best of our knowledge, this is the first proposal that tries to apply an IoT solution for privacy-preserving authentication and authorization, based on Anonymous credential Systems, like Idemix.
+So far, Idemix or privacy-ABCs have been successfully applied to deal with traditional Internet scenarios, in which users can authenticate and prove their attributes against a service provider. However, due to the reduced computational capabilities of certain IoT devices, it has not been yet considered for IoT scenarios. As we study in the state of the art chapter, current implementations are based on Java, which requires high computational and memory resources to be executed, and to the best of our knowledge, this is the first proposal that tries to apply an IoT solution for privacy-preserving authentication and authorization, based on Anonymous credential Systems, like Idemix.
 %%5
 
 
-As part of IBM's academic grant for \textit{Privacy Preserving Identity Management applied to IoT}, the goal of this project is to integrate Idemix with the IoT. It will be done using ABC4Trust's P2ABCE, a framework that defines a common architecture, policy language and data artifacts for an attribute based ecosystem, cryptographically based on either IBM's Idemix or Microsoft's U-Prove \footnote{P2ABCEngine \url{https://github.com/p2abcengine/p2abcengine}}. This gives us a standardized language to exchange Idemix's messages between IoT devices and any other P2ABCE actor.
+%As part of IBM's academic grant for \textit{Privacy Preserving Identity Management applied to IoT}, the goal of this project is to integrate Idemix with the IoT. It will be done using ABC4Trust's P2ABCE, a framework that defines a common architecture, policy language and data artifacts for an attribute based ecosystem, cryptographically based on either IBM's Idemix or Microsoft's U-Prove \footnote{P2ABCEngine \url{https://github.com/p2abcengine/p2abcengine}}. This gives us a standardized language to exchange Idemix's messages between IoT devices and any other P2ABCE actor.
 
-Once the IoT devices can execute Idemix, the new step is to take advantage of it in other deployments. In a smart building, different privacy policies could protect sensitive data, like how many people there are, and their identities, where a thermostat would only need to know if the amount of people is between some boundaries, but in case of emergency, the police department could request all the information available. We think that the first approach to achieve these ideas is first to integrate Idemix in known IoT identity systems, like FIWARE project. 
+Once the IoT devices can execute Idemix, the next step is to take advantage of it in other deployments. For example, in a smart building, different privacy policies could protect sensitive data, people identities and locations, and only reveal the necessary data, like the demographic distribution in an exposition to the marketing area, via a ZKP, but reveal all data to trusted parties in case of emergency, like the fire department. 
 
 \hfil
 
 
-This document is structured as follows: In \autoref{ch:stateoftheart} we show a state of the art analysis through the history of Idemix and related works, analysing what is of the most interest for the IoT perspective; in \autoref{ch:design} we describe the formal design of the IoT and Idemix solution, and describe the PoC implementation developed; after an implementation, it is a must to validate it, as showed during the performance tests in \autoref{ch:validation}; finally, our conclusions and lines for future work are described in \autoref{ch:conclusions}.
+This document is structured as follows: In \autoref{ch:stateoftheart} we show a state of the art analysis through the history of Idemix and related works, analysing what is of the most interest for the IoT perspective; in \autoref{ch:design} we describe the formal design of the IoT and Idemix solution; in \autoref{ch:implementation} we describe the PoC implementation developed; after an implementation, it is a must to validate it, as showed during the performance tests in \autoref{ch:validation}; and finally, our conclusions and lines for future work are described in \autoref{ch:conclusions}.
 
 
 
@@ -591,6 +589,28 @@ Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote
 
 % TODO CRYPTO
 
+\subsection{Fundamentals on Zero-Knowledge Proofs}
+
+% FIXME no referenciar idemixSpec, sino algo que explique bien los zkp
+
+To understand the cryptographic foundation of Identity Mixer we recommend to read the full specification \cite{idemixSpec}, but to introduce how one can indeed proof knowledge of a value, without revealing it, here we show the classic zero-knowledge proof of knowledge based on the discrete logarithm problem.
+
+%%%%%%
+To understand how ZKPs work, in 1990 Guillou, Quisquater and Berson published in \textit{How to Explain Zero-Knowledge Protocols to Your Children} \cite{ZKPcave:story} a story about how Ali Baba proved that he knew the magic words to open the cave, but without revealing those words to anyone.
+%%%%%%
+
+Given a prime $p$ we work in the multiplicative group of integers modulo $p$, i.e. $\mathbb{Z}_p$, and given the values $g$ and $y$ in $\mathbb{Z}_p$, it is considered to be computationally intractable to find the integer exponent $s$ such that $g^s = y$, or equivalently $log_g y = s$.
+
+We can see $s$ as the secret to preserve its zero-knowledge, only the prover should know it, not the verifier. The zero-knowledge proof of knowledge will consist on the prover demonstrating that it knows an $s$ such that $g^s = y$, but without revealing it to the verifier. We can accomplish this with only 3 messages.
+
+First, the prover chooses randomly a value $k \in \mathbb{Z}_p$, computes $\gamma = g^k\, mod\, p$ and sends $\gamma$ to the verifier.
+
+Secondly, the verifier then chooses another random exponent $r$ and sends it to the prover.
+
+Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to obtain $s$.
+
+The prover has proven to know the value $s$ without revealing it to the verifier, i.e. a zero-knowledge proof of knowledge on the secret $s$.
+
 
 \section{Design}\label{ch:design}
 
@@ -617,9 +637,8 @@ Even in the case we were to implement all P2ABCE inside an IoT device, we would 
 
 \hfil
 
-Computation offloading is not new to IoT deployments. For example, IPv6 involves managing 128 bits per address and other headers, and many IoT scenes only need to communicate inside a private network, making only the last 64 bits in an address relevant. To reduce that overhead, instead of IPv6 they use 6LoWPAN to compress packets and use smaller address sizes. To communicate a 6LoWPAN with the Internet or other networks, the IoT devices delegate the networking workload on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart bands or watches can install applications, bit many of them delegate on the user's phone to accomplish their task.
-
-Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it's also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and the P2ABCE server delegates on the IoT, acting now as a smart card, for the cryptography.
+Computation offloading is not a new technique for IoT environments. For example, to reduce the overhead of IPv6 we use 6LoWPAN to compress packets and use smaller address sizes. In order to communicate a 6LoWPAN with other networks, the IoT devices delegate on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart watches can install applications which delegate on the user's phone to accomplish performance demanding task. 
+Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it is also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and that P2ABCE server delegates on the IoT device, acting now as the smart card.
 
 
 
@@ -730,7 +749,7 @@ In these cases, the delegation in the server goes a step forward, making the ser
 
 
 
-\section{Proof of Concept Implementation}
+\section{Proof of Concept Implementation}\label{ch:implementation}
 % +Implementation:
 % *System:
 % 	-Raspbian OS: distro de debian para Raspberry Pi, que se describirá en los tests
