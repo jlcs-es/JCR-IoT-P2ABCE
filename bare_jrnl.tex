@@ -585,19 +585,9 @@ Later, the P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}}, a 
 % Uso de P2ABCE en VANETs
 Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit), with constrained hardware, could act as a User in an P2ABC system \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware equivalent to that used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
 
-%%%%%%%%%%%%%%
-
-% TODO CRYPTO
-
 \subsection{Fundamentals on Zero-Knowledge Proofs}
 
-% FIXME no referenciar idemixSpec, sino algo que explique bien los zkp
-
-To understand the cryptographic foundation of Identity Mixer we recommend to read the full specification \cite{idemixSpec}, but to introduce how one can indeed proof knowledge of a value, without revealing it, here we show the classic zero-knowledge proof of knowledge based on the discrete logarithm problem.
-
-%%%%%%
-To understand how ZKPs work, in 1990 Guillou, Quisquater and Berson published in \textit{How to Explain Zero-Knowledge Protocols to Your Children} \cite{ZKPcave:story} a story about how Ali Baba proved that he knew the magic words to open the cave, but without revealing those words to anyone.
-%%%%%%
+For a technical introduction to ZKPs, we recommend reading \textit{Fundamentals of Computer Security} \cite[Chapter 12]{book:856771}, but to show how one can indeed proof knowledge of a value, without revealing it, here we show the classic \textit{zero-knowledge proof of knowledge} based on the discrete logarithm problem.
 
 Given a prime $p$ we work in the multiplicative group of integers modulo $p$, i.e. $\mathbb{Z}_p$, and given the values $g$ and $y$ in $\mathbb{Z}_p$, it is considered to be computationally intractable to find the integer exponent $s$ such that $g^s = y$, or equivalently $log_g y = s$.
 
@@ -605,9 +595,9 @@ We can see $s$ as the secret to preserve its zero-knowledge, only the prover sho
 
 First, the prover chooses randomly a value $k \in \mathbb{Z}_p$, computes $\gamma = g^k\, mod\, p$ and sends $\gamma$ to the verifier.
 
-Secondly, the verifier then chooses another random exponent $r$ and sends it to the prover.
+Then, the verifier chooses another random exponent $r$ and sends it to the prover.
 
-Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to obtain $s$.
+Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to compute $s$.
 
 The prover has proven to know the value $s$ without revealing it to the verifier, i.e. a zero-knowledge proof of knowledge on the secret $s$.
 
@@ -664,24 +654,32 @@ Therefore, the IoT device now has a \textbf{duality} in its functions, because i
 \hfil
 
 
-The system will be compounded by the IoT device, the P2ABCE delegation server and the third party P2ABCE actors.
+The system will be compounded by the IoT device, the P2ABCE delegation server and the third party P2ABCE actors:
 
 \begin{itemize}
 	
 	\item \textbf{IoT device}
 	
-	In \autoref{fig:P2ABCE-IoT} shows our proposed architecture, in which the IoT device is represented with two interfaces, physical or virtual. One allows external communications to other machines, including other P2ABCE actors, that could be on the Internet, a corporate LAN, a M2M overlay network, etc. Through this interface, the P2ABCE XML messages are exchanged as in any other deployment. This allows an IoT device to interact with other actors without special adaptations to the protocol. The other interface allows a secure communication with the delegation server. Both the delegation messages and the APDU Dialogue are transmitted over this interface, making it a point of attack to the system, and we will talk about its security in the delegation process.
+	\autoref{fig:P2ABCE-IoT} shows our proposed architecture, in which the IoT device is represented with two interfaces, physical or virtual. One allows external communications to other machines, including other P2ABCE actors. Through this interface, the P2ABCE XML messages are exchanged as in any other scenario. This lets an IoT device to interact with other actors without adaptations of the protocol. The other interface allows a secure communication with the delegation server. Both the delegation messages and the APDU Dialogue are transmitted over this interface, making it a point of attack, that we will talk about during the delegation process.
 	
-	The scheme also shows the \textit{P2ABCE IoT Toolkit}. This piece of software includes the IoT Smart Card, and the API for other processes that want to use the P2ABCE system.
+	The scheme also shows the \textit{P2ABCE IoT Toolkit}. This piece of software includes the \textit{IoT Smart Card}, and the P2ABCE API.
 	
-	The IoT Smart Card is the implementation of a software smart card, listens for APDU Commands from the secure interface and stores securely the credentials and private keys within the device's memory.
+	The \textit{IoT Smart Card} is the implementation of a software smart card, listens for APDU Commands from the secure interface and stores securely the credentials and private keys within the device's memory.
 	
-	The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process. In the future, if for example the Verification Service is implemented for the IoT device, i.e., there's no need to delegate to other machine to act as a Verifier, then any program using the API won't need to change anything, the toolkit conceals the transition from delegating to native execution.
+	The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process to the server. In the future we could implement, for example, the Verification Service to run entirely in the IoT device, then the toolkit would conceal the transition from delegation to native execution.
 	
 	
 	\item \textbf{P2ABCE actors}
 	
-	If we recall from \autoref{analysisP2ABCE}, the possible roles in the system were the Issuer, the User, the Verifier, the Revocation Authority and the Inspector. All of them use the P2ABCE XML schema in the specification to communicate to each other. Any third party actor will be unaware of the fact that the device is a constrained IoT device that delegates on the P2ABCE server.
+	The possible roles in a P2ABC system are the Issuer, the User, the Verifier, the Revocation Authority and the Inspector, where these last two actors are optional. All of them use the P2ABCE XML schemas present in the specification to communicate to each other. Any third party actor that communicates with the IoT device will be unaware of the fact that the device is a constrained device that delegates on a P2ABCE server.
+	
+	\begin{figure}[bth]
+		\begin{center}
+			\includegraphics[width=0.75\linewidth]{gfx/actors.jpg}
+		\end{center}
+		\caption{Entities in a P2ABC System.}
+		\label{fig:actors}
+	\end{figure}
 	
 	
 	
@@ -700,28 +698,24 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 
 \subsection{Delegation process}
 
-Here we describe the computation offloading carried out by the IoT device.  In \autoref{fig:DelegationProving} we show an example of the IoT acting as a User, Proving a Presentation Policy to a third party Verifier.
+In this section we describe the computation offloading carried out by the IoT device.  In \autoref{fig:DelegationProving} we show an example of the IoT acting as a User, carrying out a proving of a Presentation Policy to a third party Verifier.
 
 \begin{enumerate}
 	\item Communication with P2ABCE actor.
 	
-	The IoT device, acting as a User, starts an interaction with another actor, e.g., against an Issuer to obtain a signed credential, or against a Verifier to demonstrate certain property of its attributes in a privacy-preserving way.
+	The IoT device, acting as a User, starts an interaction with another actor, like an Issuer to obtain a signed credential, or a Verifier to demonstrate certain property of its attributes in a privacy-preserving way.
 	
 	\item Delegation to the P2ABCE Server.
 	
-	Depending on what role the IoT device is acting as, it will delegate in the corresponding service, e.g. User Service. The delegation message must include the XML file, and any parameter required to accomplish the task, like the information on how to communicate with the IoT smart card (listening port, security challenge, etc.).
+	Depending on what role the IoT device is acting as, it will delegate to the corresponding service, e.g. User Service. The delegation message will include the XML data, and any parameter required to accomplish the task, like the information on how to communicate back with the IoT smart card.
 	
-	\item APDU Dialogue (if necessary).
+	\item APDU Dialogue.
 	
-	The server may need to send APDU Commands to the IoT smart card to read the credential information or perform cryptographic operations involving private keys, necessarily stored inside the IoT device.
-	
-	These APDU Commands include a list of 70 different instructions, identified by the APDU INS byte. Some of them manage the smart card, like changing the PIN code, and many are P2ABCE specific, like storing the system cryptographic parameters.
-	
-	\hfil
+	The server may need to send APDU Commands to the \textit{IoT smart card} to read the credential information or perform cryptographic operations involving private keys, necessarily stored inside the IoT device.
 	
 	\item Server response.
 	
-	The server may return a status code or a XML file if the first one required an answer from the IoT device, in which case, it will send as response to the third party actor, resuming the communication.
+	The server may return a status code indicating success, or an XML file if the third party actor requires an answer from the IoT device.
 	
 \end{enumerate}
 
@@ -729,7 +723,7 @@ Here we describe the computation offloading carried out by the IoT device.  In \
 	\begin{center}
 		\includegraphics[width=0.9\linewidth]{gfx/UML/DelegationProving}
 	\end{center}
-	\caption{Designed interactions exchanged during the IoT delegation for P2ABCE Proving operation.}
+	\caption{Messages exchanged during the proving delegation.}
 	\label{fig:DelegationProving}
 \end{figure}
 
