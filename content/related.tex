@@ -1,0 +1,82 @@
+
+\section{State of the art}\label{ch:stateoftheart}
+
+In this project we will study Identity Mixer as an Attribute-Based Credentials (ABC) solution for privacy-preserving scenarios, but there exist other solutions competing to give the best performance and capabilities as possible. The two most notable alternatives to Idemix are Microsoft's U-Prove and Persiano's ABC systems.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Persiano and Visconti presented a non-transferable anonymous
+credential system that is multi-show and for which it is possible to prove
+properties (encoded by a linear Boolean formula) of the credentials \cite{book:185217}. Unfortunately, their proof system is not efficient since the step in which a user proves
+possession of credentials (that needs a number of modular exponentiations that
+is linear in the number of credentials) must be repeated times (where is the
+security parameter) in order to obtain a satisfying soundness.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%
+
+
+Stefan Brands provided the first integral description of the U-Prove
+technology in his thesis \cite{uprove} in 2000, after which he founded the company Credentica
+in 2002 to implement and sell this technology. Microsoft acquired Credentica
+in 2008 and published the U-Prove protocol specification \cite{uprove2} in 2010
+under the Open Specification Promise4 together with open source reference software
+development kits (SDKs) in C\# and Java.
+The U-Prove technology is centered around a so-called U-Prove token. This
+token serves as a pseudonym for the prover. It contains a number of attributes
+which can be selectively disclosed to a verifier. Hence the prover decides which
+attributes to show and which to withhold. Finally there is the token’s public-key, which aggregates all information in the token, and a signature from the issuer
+over this public-key to ensure the authenticity \cite{book:947508}.
+
+%%%%%%%%%%%
+
+
+\hfil
+
+Jan Camenisch, Markus Stadler and Anna Lysyanskaya studied in \cite{Camenisch:GroupSig}, \cite{Camenisch:AnonCred} and \cite{camenisch2002signature} the cryptographic bases for signature schemes and anonymous credentials, that later became IBM's Identity Mixer protocol specification \cite{idemixSpec}.
+
+
+Luuk Danes in 2007 studied theoretically how Idemix's User role could be implemented using  
+smart cards \cite{luuk}, identifying what data and operations should be kept inside the device to perform different levels of security. The User role was divided between the smart card, holding secret keys, and the Idemix terminal, that commanded operations inside the smart card, or read the keys in it to perform the instructions itself. The studied sets were:
+\begin{itemize}
+	\item The smart card gives all information to the terminal.
+	\item The smart card only keeps the master key secret.
+	\item The smart card only gives the pseudonym with the verifier to the terminal.
+	\item The smart card keeps everything secret.
+\end{itemize}
+%%%%
+
+Later, in 2008 Víctor Sucasas also studied an anonymous credential system with smart card support \cite{sucasas}, equivalent to a basic version of Idemix, using a simulator to test the PoC and pointing out some crucial implementation details for performance. The researching tendency starts to show that smart cards are the best solution to hold safely the User's credentials.
+
+In 2009, some Java smart card PoC for Idemix were developed in \cite{javaIdemix1} and \cite{javaIdemix2}, but they weren't optimal and didn't include some Idemix's functionalities, like selective disclosure.
+
+In 2013, Vullers and Alpar, implemented an efficient smart card for Idemix \cite{vullers2013efficient}, aiming to integrate it in the IRMA\footnote{The IRMA project has been recently included in the Privacy by Design Foundation: \url{https://privacybydesign.foundation/}} project, and comparing the performance with U-Prove's smart cards. This new implementation was written in C, under the MULTOS platform for smart cards, and describes many decisions made during the development to improve the performance on such constrained devices. The terminal application was written in Java and used an extension of the Idemix cryptographic library to take care of the smart card specifics.
+
+
+% The Privacy-ABC Engine language framework acts as an abstraction layer on top of the cryptographic routines of IBM Identity Mixer and Microsoft U-Prove, allowing application developers to use the technology without needing to understand the cryptographic details.
+
+Later, the P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}}, a language framework that unifies different cryptographic ABC engines, currently supporting U-Prove and Idemix, extended the concept of smart cards, physical or logical, as holders of the credentials. The Idemix library was updated to support P2ABCE and their last version is therefore interoperable with U-Prove. The smart card specification from the P2ABCE project could be considered the official version to work with.
+
+
+% Uso de P2ABCE en VANETs
+Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit), with constrained hardware, could act as a User in an P2ABC system \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware equivalent to that used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
+
+\subsection{Fundamentals on Zero-Knowledge Proofs}
+
+For a technical introduction to ZKPs, we recommend reading \textit{Fundamentals of Computer Security} \cite[Chapter 12]{book:856771}, but to show how one can indeed proof knowledge of a value, without revealing it, here we show the classic \textit{zero-knowledge proof of knowledge} based on the discrete logarithm problem.
+
+Given a prime $p$ we work in the multiplicative group of integers modulo $p$, i.e. $\mathbb{Z}_p$, and given the values $g$ and $y$ in $\mathbb{Z}_p$, it is considered to be computationally intractable to find the integer exponent $s$ such that $g^s = y$, or equivalently $log_g y = s$.
+
+We can see $s$ as the secret to preserve its zero-knowledge, only the prover should know it, not the verifier. The zero-knowledge proof of knowledge will consist on the prover demonstrating that it knows an $s$ such that $g^s = y$, but without revealing it to the verifier. We can accomplish this with only 3 messages.
+
+First, the prover chooses randomly a value $k \in \mathbb{Z}_p$, computes $\gamma = g^k\, mod\, p$ and sends $\gamma$ to the verifier.
+
+Then, the verifier chooses another random exponent $r$ and sends it to the prover.
+
+Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to compute $s$.
+
+The prover has proven to know the value $s$ without revealing it to the verifier, i.e. a zero-knowledge proof of knowledge on the secret $s$.

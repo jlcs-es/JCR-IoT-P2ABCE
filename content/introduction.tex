@@ -1,0 +1,38 @@
+
+\section{Introduction}
+
+Internet of Things is a term with a wide range of interpretations \cite{Atzori20102787}, breafly, we can think of it as billions of devices, mainly resource constrained, that are interconnected between them, and the Internet, in order to achieve a goal.
+
+Many of this objectives require the use of a great amount of data, and thanks to organizations like WikiLeaks, people are aware of the implications of their data on the Internet, demanding more security and privacy for it. This includes not only the data shared with others, where one must trust they will keep it safe, but it's also the data collected about us and that we don't have direct control over it.
+
+In traditional M2M (Machine to Machine) environments the issues about security and privacy have already been treated deeply, but in the IoT world, due to it's recent and fast growth, it lacks of those tools to solve autonomously these problems.
+
+To address these problems of privacy in the Internet, a recent approach is the concept of \textit{strong anonymity}, that conceals our personal details while letting us continue to operate online as a clearly defined individuals \cite{stronganonymity}. To achieve it, we must address a way to perform authentication and authorization in the most privacy-friendly approach. Attribute-based credentials and \textit{selective disclosure} allow us to control what information we reveal, under a trusted environment.
+
+Intuitively, an attribute-based credential can be thought of as a digital signature by the Issuer on a list of attribute-value pairs \cite{introCredIBM}.
+The most straightforward way for the user to convince a Verifier of her list of attributes would be to simply transmit her credential to the Verifier.
+With anonymous credentials, the user never transmits the credential itself, but rather uses it to convince the Verifier that her attributes satisfy certain properties – without leaking anything about the credential other than the shown properties. This has the obvious advantage that the Verifier can no longer reuse the credential to impersonate the user. Another advantage is that anonymous credentials allow the user to reveal only a subset of her attributes.
+Stronger even, apart from showing the exact value of an attribute, the user can even convince the
+Verifier that some complex predicate over the attributes holds, e.g. that her birth date was more than 18 years ago, without revealing the real date.
+
+With usual symmetric and asymmetric cryptography it seems rather impossible to create such credentials, without an explosion of signatures over every possible combination. For this reason, current solutions rely on  Zero-Knowledge Proofs (ZKP), cryptographic methods that allow to proof knowledge of some data without disclosing it.
+
+Based on ZKPs, IBM has developed Identity Mixer\footnote{Identity Mixer - \url{https://www.research.ibm.com/labs/zurich/idemix/}}, Idemix for short, a protocol suite for privacy-preserving authentication and transfer of certified attributes. It allows user authentication without divulging any personal data. Users have a personal certificate with multiple attributes, but they can choose how many to disclose, or only give a proof based on their values, like living in a country without revealing the city in the credential. Thus, no personal data is collected that needs to be protected, managed, and treated.
+
+\begin{center}
+	\textit{``If your personal data is never collected, it cannot be stolen.''} -- Maria Dubovitskaya
+\end{center}
+
+%%%
+So far, Idemix or privacy-ABCs have been successfully applied to deal with traditional Internet scenarios, in which users can authenticate and prove their attributes against a service provider. However, due to the reduced computational capabilities of certain IoT devices, it has not been yet considered for IoT scenarios. As we study in the state of the art chapter, current implementations are based on Java, which requires high computational and memory resources to be executed, and to the best of our knowledge, this is the first proposal that tries to apply an IoT solution for privacy-preserving authentication and authorization, based on Anonymous credential Systems, like Idemix.
+%%5
+
+
+%As part of IBM's academic grant for \textit{Privacy Preserving Identity Management applied to IoT}, the goal of this project is to integrate Idemix with the IoT. It will be done using ABC4Trust's P2ABCE, a framework that defines a common architecture, policy language and data artifacts for an attribute based ecosystem, cryptographically based on either IBM's Idemix or Microsoft's U-Prove \footnote{P2ABCEngine \url{https://github.com/p2abcengine/p2abcengine}}. This gives us a standardized language to exchange Idemix's messages between IoT devices and any other P2ABCE actor.
+
+Once the IoT devices can execute Idemix, the next step is to take advantage of it in other deployments. For example, in a smart building, different privacy policies could protect sensitive data, people identities and locations, and only reveal the necessary data, like the demographic distribution in an exposition to the marketing area, via a ZKP, but reveal all data to trusted parties in case of emergency, like the fire department. 
+
+\hfil
+
+
+This document is structured as follows: In \autoref{ch:stateoftheart} we show a state of the art analysis through the history of Idemix and related works, analysing what is of the most interest for the IoT perspective; in \autoref{ch:design} we describe the formal design of the IoT and Idemix solution; in \autoref{ch:implementation} we describe the PoC implementation developed; after an implementation, it is a must to validate it, as showed during the performance tests in \autoref{ch:validation}; and finally, our conclusions and lines for future work are described in \autoref{ch:conclusions}.
