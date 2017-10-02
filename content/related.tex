@@ -10,11 +10,12 @@ In this project we will study Identity Mixer as an Attribute-Based Credentials (
 Persiano and Visconti presented a non-transferable anonymous
 credential system that is multi-show and for which it is possible to prove
 properties (encoded by a linear Boolean formula) of the credentials \cite{book:185217}. Unfortunately, their proof system is not efficient since the step in which a user proves
-possession of credentials (that needs a number of modular exponentiations that
-is linear in the number of credentials) must be repeated times (where is the
+possession of credentials (that needs a number of modular exponentiations that is linear in the number of credentials) must be repeated $k$ times (where $k$ is the
 security parameter) in order to obtain a satisfying soundness.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+Based on Persiano's ZKPs an anonymous authentication for privacy-preserving IoT was presented in \cite{alcaide2013anonymous}, but the studied performance analysis was developed using Java on a traditional desktop PC, theoretically assuming IoT devices to be proportionally 40 times slower than the testing machine.
 
 
 %%%%%%%%%
@@ -64,6 +65,8 @@ Later, the P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}}, a 
 
 % Uso de P2ABCE en VANETs
 Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit), with constrained hardware, could act as a User in an P2ABC system \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware equivalent to that used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
+
+Another recent approach to integrate Idemix in the IoT was performed in \cite{DBLP:journals/mis/BernabeRG17}, where it can be seen as a first attempt of a real re-implementation, not simulation, but aimed for Android devices, written in Java, and therefore, not suitable for constrained devices either.
 
 \subsection{Fundamentals on Zero-Knowledge Proofs}
 

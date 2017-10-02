@@ -108,12 +108,12 @@
 
 
 
-
+\usepackage{graphicx}
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  \usepackage[pdftex]{graphicx}
+%  \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
   % \graphicspath{{../pdf/}{../jpeg/}}
   % and their extensions so you won't have to specify these with
@@ -454,13 +454,13 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-In this paper we design a solution to integrate IBM's Identity Mixer into the IoT ecosystem, integrating its privacy-preserving capabilities thanks to the use of Zero-Knowledge Proof cryptography. To validate our design, we implemented a functional Proof of Concept written in C for IoT devices. The applications of such solution promise to improve both the security and privacy of IoT, which in recent years have proved to be compromised.
+The pervasive nature of Internet of Things entails additional threats that compromise the security and privacy of IoT devices and, eventually, the users. This issue is aggravated in constrained IoT devices equipped with minimal hardware resources. Current security and privacy implementations need to be re-designed and implemented maintaining its LoA, aiming for this family of devices. To cope with this issue, this paper proposes the first novel attempt to leverage Anonymous Credential Systems (ACS) to preserve the privacy of autonomous IoT constrained devices. Concretely, we have designed a solution to integrate IBM’s Identity Mixer into constrained IoT ecosystems, endowing the IoT with ACS’s privacy-preserving capabilities. The solution has been designed, implemented and evaluated proving its feasibility.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
-%\begin{IEEEkeywords}
-%IEEE, IEEEtran, journal, \LaTeX, paper, template.
-%\end{IEEEkeywords}
+\begin{IEEEkeywords}
+Anonymous credential system, Zero-knowledge proof of knowledge, Internet of Things, Identity Mixer
+\end{IEEEkeywords}
 
 
 
