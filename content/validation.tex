@@ -15,13 +15,13 @@ To test the correct execution of the \textit{IoT smart card}, we will use the AB
 
 First go through the \textbf{setup} phase, where several artifacts are generated and distributed to the various P2ABCE entities. Then a ticket credential containing the following attributes is issued:
 
-\begin{verbatim}
-First name: John
-Last name: Dow
-Birthday: 1985-05-05Z
-Member number: 23784638726
-Matchday: 2013-08-07Z
-\end{verbatim}
+\begin{Verbatim}[fontsize=\footnotesize]
+	First name: John
+	Last name: Dow
+	Birthday: 1985-05-05Z
+	Member number: 23784638726
+	Matchday: 2013-08-07Z
+\end{Verbatim}
 
 During \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
 
@@ -51,7 +51,7 @@ It is worth noting that during the test, the measured use of the CPU showed that
 During the first step of our testbed the Omega2 doesn't intervene until the creation of the smart card, therefore, the times measured for each REST call in the second and third scenarios are practically identical.
 
 \begin{figure}[bth]
-	\includegraphics[width=\linewidth]{gfx/graphics/setuptable}
+	\includegraphics[width=\linewidth]{gfx/graphics/SetupGraphTable}
 	\caption{Setup times (milliseconds) and relative speedup.}
 	\label{fig:setup:graph}
 \end{figure}
@@ -71,7 +71,8 @@ Here we create a \textit{SoftwareSmartcard} or a \textit{HardwareSmartcard}, poi
 The REST method to create a \textit{SoftwareSmartcard} is $/createSmartcard$, and to create a \textit{HardwareSmartcard}, using the \textit{IoTsmartcardio} implementation, we use $/initIoTsmartcard$. This operation is done only once per device, and includes APDU Commands from the creation of the PIN and PUK of the smart card, to storing the system parameters from the previous setup step.
 
 \begin{figure}[bth]
-	\centerline{\includegraphics[width=0.4\linewidth]{gfx/graphics/createSCtable}}
+	\centerline{\includegraphics[width=0.4\linewidth]{gfx/graphics/createSC}
+		\includegraphics[width=0.4\linewidth]{gfx/graphics/createSCtable}}
 	\caption{Create smart card times (seconds) and relative speedup.}
 	\label{fig:createSmartCard:graph}
 \end{figure}
@@ -126,8 +127,8 @@ As we can see, the three REST calls to the delegation User service involve commu
 
 
 \begin{figure}[bth]
-	\includegraphics[width=\linewidth]{gfx/graphics/issuancetable}
-	\caption{Issuance times (milliseconds) and relative speedup.}
+	\includegraphics[width=\linewidth]{gfx/graphics/IssuanceGraphTable}
+	\caption{Issuance times (milliseconds)}% and relative speedup.}
 	\label{fig:issuance:graph}
 \end{figure}
 
@@ -172,8 +173,8 @@ Again, as shown in \autoref{fig:proving:graph}, there is a correlation between t
 
 
 \begin{figure}[bth]
-	\includegraphics[width=.8\linewidth]{gfx/graphics/provingtable}
-	\caption{Proving times (milliseconds) and relative speedup.}
+	\includegraphics[width=\linewidth]{gfx/graphics/ProvingGraphTable}
+	\caption{Proving times (milliseconds)}% and relative speedup.}
 	\label{fig:proving:graph}
 \end{figure}
 
@@ -226,5 +227,13 @@ Finally, the Proving step is expected to be the most commonly performed operatio
 	\caption{Total time spent for each step in the Omega2+RPi3 scenario.}
 	\label{totaltime}
 \end{table}
+
+%\begin{figure}[bth]
+%	\begin{center}
+%		\includegraphics[width=0.75\linewidth]{gfx/graphics/TotalGraph}
+%	\end{center}
+%	\caption{Total time spent for each step in the Omega2+RPi3 scenario.}
+%	\label{totaltime}
+%\end{figure}
 
 
