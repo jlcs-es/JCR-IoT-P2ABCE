@@ -1,5 +1,7 @@
 @startuml provingDelegation
 
+!include "skin.iwsd"
+
 box "Prover" 
 	participant "P2ABCEngine\nJava User Service" as p2abce
     participant "IoT device" as iot
@@ -18,19 +20,22 @@ iot <- Verifier : presentationPolicyAlternatives.xml
 
 |||
 
-p2abce <- iot : Proving(presentationPolicyAlternatives.xml)
-note right : hola
+p2abce <- iot : [REST/CoAP/RPC/...]\nProving(presentationPolicyAlternatives.xml)
+note right : IoT device delegates to P2ABCE\nserver the parsing of XML
 
 p2abce --> iot : APDU Command
 p2abce <-- iot : APDU Response
+note right : Server requests IoT smart card to\nperform cryptographic operations
+
 
 p2abce <--> iot : ...
 
 p2abce -> iot : presentationToken.xml
+note right : Server answers with the\nP2ABCE response XML
 
 |||
 
 iot -> Verifier : Proof to Verifier:\npresentationToken.xml
-
+note left : IoT device resumes the\ncommunication with the Verifier
 
 @enduml
