@@ -1,0 +1,36 @@
+@startuml provingDelegation
+
+box "Prover" 
+	participant "P2ABCEngine\nJava User Service" as p2abce
+    participant "IoT device" as iot
+end box
+
+participant Verifier
+
+iot -> Verifier : requestPresentationPolicy
+note left
+    IoT device starts the
+    proving protocol with
+    the Verifier
+end note
+
+iot <- Verifier : presentationPolicyAlternatives.xml
+
+|||
+
+p2abce <- iot : Proving(presentationPolicyAlternatives.xml)
+note right : hola
+
+p2abce --> iot : APDU Command
+p2abce <-- iot : APDU Response
+
+p2abce <--> iot : ...
+
+p2abce -> iot : presentationToken.xml
+
+|||
+
+iot -> Verifier : Proof to Verifier:\npresentationToken.xml
+
+
+@enduml
