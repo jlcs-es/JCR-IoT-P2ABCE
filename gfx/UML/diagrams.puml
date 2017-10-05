@@ -3,14 +3,17 @@
 !include "skin.iwsd"
 
 box "Prover" 
-	participant "P2ABCEngine\nJava User Service" as p2abce
-    participant "IoT device" as iot
+	participant "P2ABCEngine\nJava User Service" as p2abce #F18CA9
+    participant "IoT device" as iot #9ABFD6
 end box
 
-participant Verifier
+participant Verifier #8CD1B8
+
+
+
 
 iot -> Verifier : requestPresentationPolicy
-note left
+note left #cdffda
     IoT device starts the
     proving protocol with
     the Verifier
@@ -21,21 +24,24 @@ iot <- Verifier : presentationPolicyAlternatives.xml
 |||
 
 p2abce <- iot : [REST/CoAP/RPC/...]\nProving(presentationPolicyAlternatives.xml)
-note right : IoT device delegates to P2ABCE\nserver the parsing of XML
+note right #bee6ff : IoT device delegates to P2ABCE\nserver the parsing of XML
 
 p2abce --> iot : APDU Command
 p2abce <-- iot : APDU Response
-note right : Server requests IoT smart card to\nperform cryptographic operations
+note right #FFEDB9 : Server requests IoT smart card to\nperform cryptographic operations
 
 
 p2abce <--> iot : ...
 
 p2abce -> iot : presentationToken.xml
-note right : Server answers with the\nP2ABCE response XML
+note right #bee6ff : Server answers with the\nP2ABCE response XML
 
 |||
 
 iot -> Verifier : Proof to Verifier:\npresentationToken.xml
-note left : IoT device resumes the\ncommunication with the Verifier
+note left #cdffda
+    IoT device resumes the
+    communication with the Verifier
+end note
 
 @enduml
