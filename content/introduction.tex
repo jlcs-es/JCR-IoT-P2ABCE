@@ -19,9 +19,9 @@ With classical symmetric and asymmetric cryptography it seems rather impossible 
 
 Based on ZKPs, IBM has developed Identity Mixer\footnote{Identity Mixer - \url{https://www.research.ibm.com/labs/zurich/idemix/}}, Idemix for short, a protocol suite for privacy-preserving authentication and transfer of certified attributes. It allows user authentication without divulging any personal data. Users have a personal certificate with multiple attributes, but they can choose how many to disclose, or only give a proof based on their values. Thus, no personal data is collected that needs to be protected, managed, and treated by third parties.
 
-\begin{center}
-	\textit{``If your personal data is never collected, it cannot be stolen.''} -- Maria Dubovitskaya
-\end{center}
+%\begin{center}
+%	\textit{``If your personal data is never collected, it cannot be stolen.''} -- Maria Dubovitskaya
+%\end{center}
 
 %%%
 So far, Idemix or privacy-ABCs have been successfully applied to deal with traditional Internet scenarios, in which users can authenticate and prove their attributes against a service provider. However, due to the reduced computational capabilities of certain IoT devices, it has not been yet considered for IoT scenarios. As we study in the state of the art chapter, current implementations of Idemix are based on Java, which requires high computational and memory resources to be executed, and to the best of our knowledge, this is the first proposal that tries to apply an IoT solution for privacy-preserving authentication and authorization, based on Anonymous Credential Systems.
