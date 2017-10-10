@@ -27,6 +27,22 @@ Even in the case we were to implement all P2ABCE inside an IoT device, we would 
 Computation offloading is not a new technique for IoT environments. For example, to reduce the overhead of IPv6 we use 6LoWPAN to compress packets and use smaller address sizes. In order to communicate a 6LoWPAN with other networks, the IoT devices delegate on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart watches can install applications which delegate on the user's phone to accomplish performance demanding task. 
 Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it is also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and that P2ABCE server delegates on the IoT device, acting now as the smart card.
 
+%TODO adaptar mejor a design
+\subsection{Fundamentals on Zero-Knowledge Proofs}
+
+For a technical introduction to ZKPs, we recommend reading \textit{Fundamentals of Computer Security} \cite[Chapter 12]{book:856771}, but to show how one can indeed proof knowledge of a value, without revealing it, here we show the classic \textit{zero-knowledge proof of knowledge} based on the discrete logarithm problem.
+
+Given a prime $p$ we work in the multiplicative group of integers modulo $p$, i.e. $\mathbb{Z}_p$, and given the values $g$ and $y$ in $\mathbb{Z}_p$, it is considered to be computationally intractable to find the integer exponent $s$ such that $g^s = y$, or equivalently $log_g y = s$.
+
+We can see $s$ as the secret to preserve its zero-knowledge, only the prover should know it, not the verifier. The zero-knowledge proof of knowledge will consist on the prover demonstrating that it knows an $s$ such that $g^s = y$, but without revealing it to the verifier. We can accomplish this with only 3 messages.
+
+First, the prover chooses randomly a value $k \in \mathbb{Z}_p$, computes $\gamma = g^k\, mod\, p$ and sends $\gamma$ to the verifier.
+
+Then, the verifier chooses another random exponent $r$ and sends it to the prover.
+
+Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to compute $s$.
+
+The prover has proven to know the value $s$ without revealing it to the verifier, i.e. a zero-knowledge proof of knowledge on the secret $s$.
 
 
 \subsection{System architecture}
