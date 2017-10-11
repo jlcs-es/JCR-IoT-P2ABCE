@@ -1,12 +1,12 @@
 
 \section{Design of the proposed solution}\label{ch:design}
 
-We now proceed to describe the design of our proposal to integrate IoT constrained devices as part of the privacy preserving system P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User role, interacting autonomously in order to authenticate and demonstrate their credential attributes in a privacy-preserving fashion.
+This section describes the design of our proposal to integrate IoT constrained devices as part of the privacy preserving system P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User role, interacting autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion, addressing the power and memory constrains many IoT devices face.
 
-In this section we will define how an IoT device may be integrated in the P2ABCE architecture, being totally compatible with any other system using P2ABCE, addressing the power and memory constrains many IoT devices face.
+%We decided to use P2ABCE with the Idemix as its Engine, because it is officially supported by the Idemix Library, it has the most up-to-date implementation, as we saw in the state of the art, and adds capabilities to Idemix like the Presentation Policies, or interoperability with U-Prove, not available without the P2ABCE project.
 
-We decided to use P2ABCE with the Idemix as its Engine, because it is officially supported by the Idemix Library, it has the most up-to-date implementation, as we saw in the state of the art, and adds capabilities to Idemix like the Presentation Policies, or interoperability with U-Prove, not available without the P2ABCE project.
 
+% TODO sección de Requerimientos y objetivos
 Our main goal is to make an IoT device capable to act as a User or Verifier in the P2ABCE architecture. For this, the device should be able to \textbf{communicate} with the Verifier or Prover with which it is interacting, manage the P2ABCE complex \textbf{XML schemas} transmitted, and perform the \textbf{cryptographic operations} required.
 
 The communication between actors depends on each IoT scenario, it can be achieved with many existing standard solutions, e.g. an IP network, a Bluetooth M2M connection, RF communication, etc.
@@ -30,20 +30,42 @@ Therefore, the IoT device now has a \textbf{duality} in its functions, because i
 %TODO adaptar mejor a design
 \subsection{Fundamentals on Zero-Knowledge Proofs}
 
-For a technical introduction to ZKPs, we recommend reading \textit{Fundamentals of Computer Security} \cite[Chapter 12]{book:856771}, but to show how one can indeed proof knowledge of a value, without revealing it, here we show the classic \textit{zero-knowledge proof of knowledge} based on the discrete logarithm problem.
+% Ejemplo de DL problem
+% Firma CL
+% Mostrar al final la estructura de la mayoría de ZKP : commitment(s), challenge, response(s)
 
-Given a prime $p$ we work in the multiplicative group of integers modulo $p$, i.e. $\mathbb{Z}_p$, and given the values $g$ and $y$ in $\mathbb{Z}_p$, it is considered to be computationally intractable to find the integer exponent $s$ such that $g^s = y$, or equivalently $log_g y = s$.
+For a deep introduction to ZKPs, we recommend reading \textit{Fundamentals of Computer Security} \cite[Chapter 12]{book:856771}, but to show how one can indeed proof knowledge of a value, without revealing it, here we show the classic \textit{zero-knowledge proof of knowledge} based on the discrete logarithm problem, also known as Schnorr's identification scheme. Based on this discrete logarithm ZKP, Idemix then derives multiple ZK proofs of relations and properties of the values hidden.
 
-We can see $s$ as the secret to preserve its zero-knowledge, only the prover should know it, not the verifier. The zero-knowledge proof of knowledge will consist on the prover demonstrating that it knows an $s$ such that $g^s = y$, but without revealing it to the verifier. We can accomplish this with only 3 messages.
 
-First, the prover chooses randomly a value $k \in \mathbb{Z}_p$, computes $\gamma = g^k\, mod\, p$ and sends $\gamma$ to the verifier.
+Using the notation introduced by Camenisch and Stadler \cite{camenisch1997efficient}, the discrete logarithm ZKP can be written as 
+\[ PK\{ (\alpha) : y = g^\alpha \}  \]
+given a known group $G=\left\langle g \right\rangle $ of prime order $q$ and public value $y\in G$. The notation means: ``we know a secret value $\alpha$ such that $g^\alpha$ is $y$'', i.e. the discrete logarithm of $y$, $log_g y = \alpha$.
 
-Then, the verifier chooses another random exponent $r$ and sends it to the prover.
 
-Finally, the prover computes the answer $\delta=k-sr \, mod\, (p-1)$ and sends it to the verifier, which checks that $\gamma \overset{?}{\equiv} g^{\delta} y^r \, mod \, p$. The verifier never receives the secret value $s$, and as long as the random value $k$ is also kept secret, and the discrete logarithm problem remains intractable, the verifier will not be able to compute $s$.
+During the first step of the protocol, the prover chooses randomly a value $r_\alpha$, computes the \textit{commitment} $t := g^{t_\alpha}$ and sends $t$ to the verifier. 
+Then, the verifier chooses another random exponent, the \textit{challenge} $c$, and sends it to the prover. 
+Next, the prover computes the \textit{response} $s:=r-c\alpha\, mod\, q$ and sends it to the verifier.
+Finnaly, the verifier checks whether or not $ t \overset{?}{=} g^{s_\alpha} y^c $ holds. The verifier never receives the secret value $\alpha$, and the verifier will not be able to compute it given $t$ and $s$.
 
-The prover has proven to know the value $s$ without revealing it to the verifier, i.e. a zero-knowledge proof of knowledge on the secret $s$.
+\begin{figure}[bth]
+	\includegraphics[width=\linewidth]{gfx/schnorr}
+	\caption{$PK\{ (\alpha) : y = g^\alpha \}$ Schnorr's protocol. The prover knows $(g,q,y,\alpha)$ such that $g^\alpha=y$. The verifier knows $(g,q,y)$.}
+	\label{fig:schnorr}
+\end{figure}
 
+We can see that the protocol works because $ g^{s_\alpha} y^c = g^{r_\alpha - c\alpha} (g^\alpha)^c =  g^{r_\alpha - c\alpha} g^{c\alpha} =
+g^{r_\alpha - c\alpha + c\alpha} = g^{r_\alpha} = t $.
+
+Going one step further, the Fiat-Shamir heuristic lets us replace the verifier challenge with a hash function $\mathcal{H}$, computing the challenge as $c:=\mathcal{H}(g\mid\mid y\mid \mid t\mid\mid n)$. The value $n$ is a random nonce generated by the verifier prior to this non-interactive ZKP. The nonce makes the verifier trust that the current ZKP is fresh and not a forgery from a previous ZKP.
+
+In Idemix every ZKP follows the same scheme as shown in here. First, we have the \textit{commitment} \texttt{t}, next the \textit{challenge} \texttt{c} (computed with $\mathcal{H}$), and finally, the \textit{response} \texttt{s}. A prover can also achieve parallel ZKPs, she first computes the multiple \texttt{t}-values, next, she computes the same challenge \texttt{c} for every simultaneous ZKP, by combining all the information in one hash $\mathcal{H}$ call, and then she calculates all the \texttt{s}-values in parallel.
+
+Therefore, to describe any proof being performed by the User, we can focus on the key steps of computing the \texttt{t}-values, challenge \texttt{c} and \texttt{s}-values, ignoring what specific mathematical operations are actually happening.
+
+%\hfil
+%%%
+%Combining the ZKPs based on the discrete logarithm with the CL-signature over the credential attributes, one can achieve selective disclosure and other predicates over the attributes.
+%%%
 
 \subsection{System architecture}
 

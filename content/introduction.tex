@@ -9,7 +9,7 @@ In traditional M2M (Machine to Machine) environments the issues about security a
 
 To address these problems of privacy in the Internet, a recent approach is the concept of \textit{strong anonymity}, that conceals our personal details while letting us continue to operate online as a clearly defined individuals \cite{stronganonymity}. To achieve it, we must address a way to perform authentication and authorization in the most privacy-friendly approach. Anonymous credentials and selective disclosure techniques allow us to control what information we reveal to others.
 
-An attribute-based credential can be thought of as a digital signature by an Issuer on a list of attribute-value pairs \cite{introCredIBM}.
+The most common type of ACS are ABCs (Attribute-Based Credentials), which can be thought of as a digital signature by an Issuer on a list of attribute-value pairs \cite{introCredIBM}.
 The most straightforward way for a user to convince a Verifier of her list of attributes would be to simply transmit her credential to the Verifier.
 With anonymous credentials, the user never transmits the credential itself, but rather uses it to convince the Verifier that her attributes satisfy certain properties - without leaking any information about the credential other than the chosen properties to display. 
 %This has the obvious advantage that the Verifier can no longer reuse the credential to impersonate the user and that anonymous credentials allow the users to reveal only a subset of her attributes.
