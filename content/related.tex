@@ -1,7 +1,4 @@
-
 \section{State of the art}\label{ch:stateoftheart}
-
-%In this project we will study Identity Mixer as an Attribute-Based Credentials (ABC) solution for privacy-preserving scenarios, but there exist other solutions competing to give the best performance and capabilities as possible. The two most notable alternatives to Idemix are Microsoft's U-Prove and Persiano's ABC systems.
 
 In this section we present a showcase of competing ACS solutions, focusing their application for the IoT, where the two most notable alternatives to Idemix are Persiano's ABC systems and Microsoft's U-Prove.
 
@@ -38,19 +35,11 @@ over this public-key to ensure the authenticity \cite{book:947508}.
 \hfil
 
 Independently of the mentioned technologies, Jan Camenisch, Markus Stadler and Anna Lysyanskaya studied in \cite{Camenisch:GroupSig,Camenisch:AnonCred,camenisch2002signature} 
-%\cite{Camenisch:GroupSig}, \cite{Camenisch:AnonCred} and \cite{camenisch2002signature}%
 the cryptographic bases for signature schemes and anonymous credentials that later became IBM's Identity Mixer protocol specification \cite{idemixSpec}.
 
 
 Luuk Danes in 2007 studied theoretically how Idemix's User role could be implemented using  
 smart cards \cite{luuk}, identifying what data and operations should be kept inside the device to perform different levels of security. The User role was divided between the smart card, holding secret keys, and the Idemix terminal, that commanded operations inside the smart card, or read the keys in it to perform the instructions itself. The studied sets were a combination of possibilities where the smart card would give all the information to the terminal, only partial information, or keep everything secret and perform all the private operations within itself.
-%\begin{itemize}
-%	\item The smart card gives all information to the terminal.
-%	\item The smart card only keeps the master key secret.
-%	\item The smart card only gives the pseudonym with the verifier to the terminal.
-%	\item The smart card keeps everything secret.
-%\end{itemize}
-%%%%%
 
 Later, in 2008 V\'ictor Sucasas also studied an anonymous credential system with smart card support \cite{sucasas}, equivalent to a basic version of Idemix, using a simulator to test the PoC and pointing out some crucial implementation details for performance. The researching tendency starts to show that smart cards are the best solution to hold safely the User's credentials.
 
@@ -59,14 +48,10 @@ In 2009, some Java smart card PoC for Idemix were developed in \cite{javaIdemix1
 In 2013, Vullers and Alpar, implemented an efficient smart card for Idemix \cite{vullers2013efficient}, aiming to integrate it in the IRMA\footnote{The IRMA project has been recently included in the Privacy by Design Foundation: \url{https://privacybydesign.foundation/}} project, and comparing the performance with U-Prove's smart cards. This new implementation was written in C, under the MULTOS platform for smart cards, and describes many decisions made during the development to improve the performance on such constrained devices. The terminal application was written in Java and used an extension of the Idemix cryptographic library to take care of the smart card specifics.
 
 
-% The Privacy-ABC Engine language framework acts as an abstraction layer on top of the cryptographic routines of IBM Identity Mixer and Microsoft U-Prove, allowing application developers to use the technology without needing to understand the cryptographic details.
-
 Later, the P2ABCE\footnote{\url{https://github.com/p2abcengine/p2abcengine}} project extended the concept of smart cards, physical or logical, as holders of the credentials.  The P2ABCE project is a language framework that unifies different cryptographic ABC engines and policies, currently supporting U-Prove and Idemix. The Idemix library was updated to support P2ABCE and their last version is therefore interoperable with U-Prove. The smart card specification from the P2ABCE project can be considered the official version to work with. The Identity Mixer team instructs the use of P2ABCE in order to use Idemix itself.
 
 
-% Uso de P2ABCE en VANETs
-Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit) with constrained hardware could act as a User in a P2ABCE ecosystem \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system. 
-%In our project, we can consider ourselves as part of their \textit{future work}, because our PoC will run on hardware equivalent to that used in VANET systems, and has been implemented in C instead of Java, which is more realistic and efficient for its deployment in an OBU.
+Related to the IoT, the P2ABCE project has been used to test in a VANET\footnote{Vehicular Ad-Hoc Network} scenario how an OBU (On Board Unit) with constrained hardware could act as a User in a P2ABCE ecosystem \cite{vanet}. However, after the theoretical analysis, the paper only simulates a computer with similar performance as an OBU, without adapting the existing Java implementation of P2ABCE to a real VANET system.
 
 Another recent approach to integrate Idemix in the IoT was performed in \cite{DBLP:journals/mis/BernabeRG17}, where it can be seen as a first attempt of a real re-implementation, not simulation, but aimed for Android devices, written in Java, and therefore, not suitable for constrained devices either.
 

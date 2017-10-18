@@ -2,28 +2,16 @@
 \section{Conclusions and Future Work}\label{ch:conclusions}
 %************************************************
 
-
-%In the memory of this project we try to show the work done from the beginning of our research, but we only showed our right decisions, and the information that is significant for the final solution. The truth is that, aside from the information included in this paper, we have worked with other systems that ended up discarded. This isn't a negative aspect, because if we didn't, for example, study the Contiki OS, Cooja simulator and the compatible hardware, we would not be sure the development of a PoC for those systems would be infeasible with the time given.
-
-
-%With regard to the work presented, t
-The flexibility of the computation offloading technique, identifying the key operations that can be delegated, and those ones that can't, has allowed us to define a generic privacy-preserving solution for the vast world of the Internet of Things. The IoT devices can operate as individual actors in the P2ABCE ecosystem, and when in need of performing computation offloading, the delegation server has been shown to be also be a device considered into the IoT family.
-
-
-
-%During the development, we had to investigate a lot of concepts related to IoT, smart cards, and even the insides of P2ABCE's code, to fix many existing bugs in the original project and minimize the amount of changes it had to undergo, in order to work with the IoT devices.
-Our PoC implementation demonstrates that this project is actually feasible, not by performing a simulation of an IoT device, like in \cite{vanet} or \cite{alcaide2013anonymous}, but deploying it in a real IoT device. However, the use of third party non-optimized libraries and no hardware acceleration support, makes the PoC too slow for certain cases, like real-time systems.
-
+This paper has presented a generic privacy-preserving solution for the vast world of the Internet of Things. The IoT devices can operate as individual actors in the P2ABCE ecosystem, and when in need of performing computation offloading, the delegation server can also be a device considered into the IoT family.
+Our PoC implementation demonstrates that this project is actually feasible in constrained devices, not by performing a simulation of an IoT device, like in \cite{vanet} or \cite{alcaide2013anonymous}, but deploying it in a real IoT device.
 
 On the design aspect, we mentioned a P2ABCE API to abstract the delegation process to other processes running in the IoT devices. To develop this API we should study the available solutions to decide how to delegate to the server, e.g. using REST, CoAP, RPC, and consider the security issues mentioned in previous sections. Then, we can define an standard API and implement it assuring a great level of trust in the technique.
+On the implementation side, it would be interesting to compare the execution of the current PoC to a version with cryptographic hardware acceleration, for example, using Atmel's chips for SHA, AES and secure memory.
 
 
+\subsection*{Conflicts of Interest}
 
-On the implementation side, we propose the development of a second PoC which targeted even more constrained devices, like Arduino or Contiki systems. 
-It would also be interesting to compare the execution of the current PoC to a version with cryptographic hardware acceleration, for example, using Atmel's chips for SHA, AES and secure memory.
-
-
-
+The authors declare that they have no conflicts of interest.
 
 \subsection*{Acknowledgements}
 

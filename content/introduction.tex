@@ -1,4 +1,3 @@
-
 \section{Introduction}
 
 Internet of Things is a term with a wide range of interpretations \cite{Atzori20102787}, breafly, we can think of it as billions of devices, mainly resource constrained, which are interconnected between them and the Internet, in order to achieve a goal.
@@ -12,35 +11,18 @@ To address these problems of privacy in the Internet, a recent approach is the c
 The most common type of ACS are ABCs (Attribute-Based Credentials), which can be thought of as a digital signature by an Issuer on a list of attribute-value pairs \cite{introCredIBM}.
 The most straightforward way for a user to convince a Verifier of her list of attributes would be to simply transmit her credential to the Verifier.
 With anonymous credentials, the user never transmits the credential itself, but rather uses it to convince the Verifier that her attributes satisfy certain properties - without leaking any information about the credential other than the chosen properties to display. 
-%This has the obvious advantage that the Verifier can no longer reuse the credential to impersonate the user and that anonymous credentials allow the users to reveal only a subset of her attributes.
 Stronger even, apart from showing the exact value of an attribute, the user can even convince the
 Verifier that some complex predicate over the attributes holds, e.g. that her birth date was more than 18 years ago, without revealing the real date.
 
 With classical symmetric and asymmetric cryptography it seems rather impossible to create such credentials without an explosion of signatures over every possible combination of attributes. For this reason, current solutions rely on  Zero-Knowledge Proofs (ZKP), cryptographic methods that allow to proof knowledge of some data without disclosing it.
 
-Based on ZKPs, IBM developed Identity Mixer,
-%\footnote{Identity Mixer - \url{https://www.research.ibm.com/labs/zurich/idemix/}}, %broken url
+Based on ZKPs, IBM developed Identity Mixer\footnote{Identity Mixer - \url{https://www.zurich.ibm.com/identity_mixer/}}, %broken url
 Idemix for short, a protocol suite for privacy-preserving authentication and transfer of certified attributes. It allows user authentication without divulging any personal data. Users have a personal certificate with multiple attributes, but they can choose how many to disclose, or only give a proof based on their values. Thus, no personal data is collected that needs to be protected, managed, and treated by third parties.
 
-%\begin{center}
-%	\textit{``If your personal data is never collected, it cannot be stolen.''} -- Maria Dubovitskaya
-%\end{center}
-
-%%%
 So far, Idemix or privacy-ABCs have been successfully applied to deal with traditional Internet scenarios, in which users can authenticate and prove their attributes against a service provider. However, due to the reduced computational capabilities of certain IoT devices, it has not been yet considered for IoT scenarios. As it is presented in the state of the art chapter, current implementations of Idemix are based on Java, which requires high computational and memory resources to be executed, and to the best of our knowledge, this is the first proposal that tries to apply an IoT solution for privacy-preserving authentication and authorization, based on Anonymous Credential Systems.
-%%5
-
-
-%As part of IBM's academic grant for \textit{Privacy Preserving Identity Management applied to IoT}, the goal of this project is to integrate Idemix with the IoT. It will be done using ABC4Trust's P2ABCE, a framework that defines a common architecture, policy language and data artifacts for an attribute based ecosystem, cryptographically based on either IBM's Idemix or Microsoft's U-Prove \footnote{P2ABCEngine \url{https://github.com/p2abcengine/p2abcengine}}. This gives us a standardized language to exchange Idemix's messages between IoT devices and any other P2ABCE actor.
-
-%Once the IoT devices can execute Idemix, the next step is to take advantage of it in other deployments. For example, in a smart building, different privacy policies could protect sensitive data, people identities and locations, and only reveal the necessary data, like the demographic distribution in an exposition to the marketing area, via a ZKP, but, in case of emergency, reveal all data to trusted parties like the fire department. 
-
-
 
 The design and implementation presented in this paper will allow constrained IoT devices to carry out all actions available in the Idemix protocol, being in control of the decisions to take in every step. This achieves oblivious interactions between any traditional machine using Idemix and the IoT devices, without having to adapt the protocol, or a subset it, to interact with these new entities.
 
-
 \hfil
-
 
 This document is structured as follows: Section \ref{ch:stateoftheart} provides a state of the art analysis through the history of Idemix and related works, analysing what is of the most interest for the IoT perspective. Section \ref{ch:design} presents a formal design of the proposed IoT and Idemix solution. Section \ref{ch:implementation} describes the PoC implementation developed. After any implementation, it is a must to validate it, as showed during the performance tests in section \ref{ch:validation}. Finally, our conclusions and lines for future work are described in section \ref{ch:conclusions}.
