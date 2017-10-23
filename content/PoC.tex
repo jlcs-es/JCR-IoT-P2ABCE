@@ -1,5 +1,3 @@
-
-
 \section{Proof of Concept Implementation}\label{ch:implementation}
 % +Implementation:
 % *System:
@@ -15,20 +13,23 @@
 %  -Sequence diagrams. TODO
 
 
-In this section we present the first PoC implementation, introducing the IoT system where we are going to work, then we will describe the delegation protocols, one for the computation offloading of the IoT device on the P2ABCE server, and another for the transmission of APDU Commands, and finally, we will describe the IoT smart card implementation.
+This section presents the first PoC implementation, introducing the IoT system used in the tests, the delegation protocols, one for the computation offloading of the IoT device on the P2ABCE server, and another one for the transmission of APDU Commands, and finally, the IoT smart card implementation.
 
-We will develop our PoC in Linux based systems aimed for IoT environments, that will serve as a starting point for future implementations in more constrained devices or different systems.
-
-In our delegation server we will run Raspbian OS in a Raspberry Pi3, and for our IoT device, we will use LEDE, Linux Embedded Development Environment, a distribution forked from OpenWrt, aimed for routers and embedded chips with low resources requirements.
-
+The PoC is developed under a Linux based system aimed for IoT environments, a fork of OpenWrt, called LEDE (Linux Embedded Development Environment), that will serve as a starting point for future implementations in more constrained devices or different systems. 
+The delegation server we will run on Raspbian OS, in a Raspberry Pi 3, with a working Java Runtime.
 
 
-\subsection{PoC Delegation}
-
-The delegation process has two steps, first the IoT device calls the P2ABCE server to offload the parsing of the XML data, and then the P2ABCE server sending APDU Commands to the IoT smart card in the device.
+%%%Regarding the definition of the P2ABCE API, it is a work in progress, and in the meantime,         we           will work with the REST API currently available in the P2ABCE project to perform the delegation. Regarding the \textit{IoT Smart Card}, the P2ABCE project defines the APDU instructions with the corresponding format of the APDU Commands and Responses. In the next section we will explain the PoC for IoT based on these P2ABCE specifications.
 
 
-\subsubsection{PoC Delegation to the P2ABCE Server}
+%\subsection{PoC Delegation}
+
+\hfil
+
+The delegation process has two steps, first the IoT device calls the P2ABCE server to offload the parsing of the XML data, and then the P2ABCE server, sending APDU Commands, delegates to the IoT smart card the cryptographic calculations.
+
+
+\subsection{Delegation to P2ABCE Server}
 
 
 Currently P2ABCE offers multiple REST web services to run different roles in P2ABCE system: User Service, Issuer Service, Verification Service, etc. 
@@ -49,7 +50,7 @@ The remaining REST methods are left untouched, and will serve to parse the XML f
 
 \hfil
 
-\subsubsection{APDU Dialogue Transmission}
+\subsection{APDU Dialogue Transmission}
 
 
 To transmit the APDU messages in our PoC we use a simple protocol, that we will refer as BIOSC (Basic Input Output Smart Card). It consists on one byte for the instruction, that can mean either an APDU Commnad or a finishing instruction to close the connection.
