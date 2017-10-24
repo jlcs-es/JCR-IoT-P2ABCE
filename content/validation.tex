@@ -1,4 +1,3 @@
-
 %************************************************
 \section{Validation and Performance Evaluation}\label{ch:validation}
 %************************************************
@@ -7,7 +6,7 @@
 % https://abc4trust.eu/download/D4.2%20Final%20Reference%20Implementation.pdf
 % Comparar con página 44
 
-In this section, we will describe the deployment of three testing scenarios: a laptop, a Raspberry Pi 3, and an Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution runs as expected and is feasible.
+This section describes the deployment of three testing scenarios: a laptop, a standalone Raspberry Pi 3, and an Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution runs as expected and is feasible.
 
 \subsection{Testbed description}
 
@@ -131,7 +130,9 @@ As we can see, the three REST calls to the delegation User service involve commu
 
 
 \begin{figure}[bth]
-	\includegraphics[width=\linewidth]{gfx/graphics/IssuanceGraphTable}
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{gfx/graphics/IssuanceGraphTable}
+	\end{center}
 	\caption{Issuance times (milliseconds)}% and relative speedup.}
 	\label{fig:issuance:graph}
 \end{figure}
@@ -177,7 +178,9 @@ Again, as shown in \autoref{fig:proving:graph}, there is a correlation between t
 
 
 \begin{figure}[bth]
-	\includegraphics[width=\linewidth]{gfx/graphics/ProvingGraphTable}
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{gfx/graphics/ProvingGraphTable}
+	\end{center}
 	\caption{Proving times (milliseconds)}% and relative speedup.}
 	\label{fig:proving:graph}
 \end{figure}
