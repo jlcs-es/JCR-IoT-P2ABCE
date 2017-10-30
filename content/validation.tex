@@ -6,7 +6,7 @@
 % https://abc4trust.eu/download/D4.2%20Final%20Reference%20Implementation.pdf
 % Comparar con página 44
 
-This section describes the deployment of three testing scenarios: a laptop, a standalone Raspberry Pi 3, and an Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution runs as expected and is feasible.
+This section describes the deployment of three testing scenarios: a laptop, a standalone Raspberry Pi 3 (RPi3), and an Omega2 IoT device with the Raspberry Pi 3 as the delegation server. We will measure and compare the results to determine if the proposed solution runs as expected and is feasible.
 
 \subsection{Testbed description}
 
@@ -25,31 +25,32 @@ Birthday: 1985-05-05Z
 
 %During the \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
 
-Then \textbf{presentation} is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used.
+Then a \textbf{presentation} is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate which ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used. The policy also includes the nonce value for the proof's challenge.
 
 \hfil
 
 %\subsubsection{Execution environment}
 
-First we will execute the test in our development machine (laptop). After asserting that the services work as expected, we then run the test in a Raspberry Pi 3\footnote{\url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}}, exactly like in the laptop. Finally, we will deploy the IoT smart card in an Omega2\footnote{\url{https://docs.onion.io/omega2-docs/omega2.html}} and the delegation services in the Raspberry Pi 3. After every test, we checked that the issuing and proving were successful, in case a cryptographic error appeared in the implementation.
-A downside of using the Omega2 is the lack of hardware acceleration for cryptographic operations, unlike the MULTOS smart cards.
+First we will execute the test in our development laptop. After asserting that the services work as expected, we then proceed to run the test in a RPi3\footnote{\url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}}, exactly like in the laptop. Finally, the PoC IoT smart card will be deployed in an Omega2\footnote{\url{https://docs.onion.io/omega2-docs/omega2.html}} and the delegation services in the RPi3.
+%After each test, we checked that the issuing and proving were successful, in case a cryptographic error appeared in the implementation.
+%A downside of using the Omega2 is the lack of hardware acceleration for cryptographic operations, unlike the MULTOS smart cards.
 
+\hfil
 
-
-\paragraph{The network} In our third scenario, the Raspberry Pi 3 and the Omega2 will talk to each other over TCP. This implies possible network delays depending on the quality of the connection. The Raspberry Pi 3 is connected over Ethernet to a switch with WiFi access point. The Omega2 is connected over WiFi n to said AP. To ensure the delay wasn't significant, we measured 6000 APDU messages taken from previous executions, and the results show that the mean transmission time is less than half a millisecond per APDU. From our analysis of the tests we conclude that the network time is negligible compared to the rest of the computations.
+The third scenario involves communications over TCP in a LAN. The RPi3 is connected over Ethernet to a switch with a WiFi access point. The Omega2 is connected over WiFi n to said AP. To test the possible network delays, $6000$ samples of APDU messages were taken from the test executions, and sent between the two devices, without handling the APDUs. The results show a mean of $14\mu s$ per byte sent, i.e. less than half a millisecond per APDU.
 
 
 
 \subsection{Results}
 
-After 20 executions for each scenario (laptop, RPi3, Omega2+RPi3), we measure the time of each REST call executed against the User Service in the delegation server and take the means to compare each step of the testbed. Because during a call to the User Service, the server may contact the \textit{IoT Smart Card}, the difference in times between the second and third scenario will show the performance of our IoT PoC.
+After 20 executions for each scenario (laptop, RPi3, Omega2+RPi3), the time was measured for each REST call executed against the User Service in the delegation server, to later take the means to compare each step of the testbed. Because during a call to the User Service, the server may contact the \textit{IoT Smart Card}, the difference in times between the second and third scenario will show the performance of the IoT PoC.
 
 It is worth noting that during the tests, the CPU usage showed that P2ABCE does not benefit from parallelization, therefore it only uses one of the four available cores in the laptop and Raspberry Pi 3.
 
 %\paragraph{The setup}\hfil
 \hfil
 
-The IoT device does not intervene in the first step of our testbed, the setup, until the initialization of the new smart card, thus the times measured for each REST call in the second and third scenarios are practically identical as we can see in Fig.~\ref{fig:setup:graph}. the laptop is about ten times faster than Raspberry Pi 3. It is also noticeable that the setup step is only done once, and the highest time measured is less than two and a half seconds.
+The IoT device does not intervene in the first step of the testbed, the setup, until the initialization of the new smart card, thus the times measured for each REST call in the second and third scenarios are practically identical as shown in Fig.~\ref{fig:setup:graph}. The laptop is about ten times faster than the Raspberry Pi 3. It is also noticeable that the setup step is only done once, and the highest time measured is less than two and a half seconds.
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/graphics/SetupGraphTable}
@@ -73,10 +74,9 @@ The creation of a \texttt{SoftwareSmartcard} or a \texttt{HardwareSmartcard}, wh
 
 \begin{figure}[bth]
 	\begin{center} 
-	\includegraphics[width=0.5\linewidth]{gfx/graphics/createSCtable}
+		\includegraphics[width=0.6\linewidth]{gfx/graphics/createSCGraph}
 	\end{center} 
-	%\includegraphics[width=0.4\linewidth]{gfx/graphics/createSC}} 
-	\caption{Create smart card times (seconds) and relative speedups.} 
+	\caption{Create smart card times (seconds).} 
 	\label{fig:createSmartCard:graph} 
 \end{figure}
 
@@ -87,7 +87,7 @@ The creation of a \texttt{SoftwareSmartcard} or a \texttt{HardwareSmartcard}, wh
 %	\label{fig:createSmartCard:graph2}
 %\end{figure}
 
-As this is the first interaction between the RPi3 and the IoT smart card running in the Omega2, it is interesting to analyse the possible network delays. The process uses $30$ APDU Commands, and their respective Responses, with a total of $1109$ bytes. From our network benchmark, the delay in the transmission is around 15 and 20 ms, negligible compared to the total operation time.
+As this is the first interaction between the RPi3 and the IoT smart card running in the Omega2, it is interesting to analyse the possible network delays. The process uses $30$ APDU Commands, and their respective Responses, with a total of $1109$ bytes. From the network benchmark, the delay in the transmission is around 15 and 20 ms, negligible compared to the total operation time.
 
 
 %\paragraph{Issuance of the credential}\hfil
@@ -171,7 +171,7 @@ The APDU Dialogue involved $28$ APDUs, with $1939$ bytes, about only $27$ms of d
 %	\label{fig:proving:graph2}
 %\end{figure}
 
-Unlike the previous steps, the Proving is the most used method and key feature of the P2ABCE ecosystem. The laptop performs a prove in less than one second, the RPi3 standalone needs $15$ seconds, but our P2ABCE IoT deployment needs $15$ seconds for the first step, and $18$s for the second step, $33$ seconds total to generate a Presentation Token.
+Unlike the previous steps, the Proving is the most used method and key feature of the P2ABCE ecosystem. The laptop performs a prove in less than one second, the RPi3 standalone needs $15$ seconds, but the P2ABCE IoT deployment needs $15$ seconds for the first step, and $18$s for the second step, $33$ seconds total to generate a Presentation Token.
 
 
 
@@ -180,32 +180,30 @@ Unlike the previous steps, the Proving is the most used method and key feature o
 
 %\paragraph{Memory usage on the Omega2}\hfil
 
-After the tests, in a new series of executions, the tool \texttt{time -v} provided the \texttt{Maximum resident set size (kbytes)} of the process, i.e. the maximum size of RAM used by the process since its launch. The mean of the maximum memory usage measured was $6569.6$ kbytes. For the IoT smart card this involves the use of static memory for all the \textit{global variables} of the smart card logic, as well as the dynamic memory allocated by the external utilities libraries, like GMPlib, OpenSSL and cJSON.
+After the tests, in a new series of executions, the tool \texttt{time -v} provided the \texttt{Maximum resident set size (kbytes)} of the PoC IoT smart card, i.e. the maximum size of RAM used by the process since its launch. The mean of the maximum memory usage measured was $6569.6$ kbytes. This includes the use of static memory for all the \textit{global variables} of the smart card logic, as well as the dynamic memory allocated by the external utilities libraries, GMPlib, OpenSSL and cJSON.
 
-GMP and OpenSSL always allocate the data in their own ADT, which involves copying the arrays of bytes representing the big modular integers from the cryptographic operations instead of using the byte array representations of the existing smart card logic. cJSON, used in the serialization of the smart card for storage, and debugging purposes, stores a copy of every saved variable in the JSON tree structure, then allocates a string with the JSON, that the user can then write to the save file.
-
-It is important to understand the many bad usages of memory done in this PoC by auxiliary libraries for future improvements of the code. A custom modular library using the same number representations as the smart card logic, an optimized binary serialization method, and many other improvements, are part of our future work.
+GMP and OpenSSL always allocate the data in their own ADT, which involves copying the arrays of bytes representing the big modular integers from the cryptographic operations instead of using the byte array representations of the smart card logic. cJSON, used in the serialization of the smart card, for storage and debugging purposes, stores a copy of every saved variable in a JSON tree structure, then allocates a string with the JSON, that then the user can write to a file.
+These multiple poor uses of memory could be avoided in future versions of the PoC, with a custom binary serialization or arithmetic library.
 
 
 \subsection{Validation conclusions}
 
 % De https://abc4trust.eu/download/D4.2%20Final%20Reference%20Implementation.pdf  página 45 discussion, que si la credencial está cacheada se reducen ciertos tiempos, este es el peor caso
 
-Below \autoref{totaltime} sums up the time in seconds used in each step of the test for the Omega2 scenario.
-
+Below, Table~\ref{totaltime} sums up the time used in each step of the test for the IoT scenario.
 The first step, \textit{System Setup} is done only once when the system is being deployed, and the \textit{IoT Smart Card Setup} only once per device.
-
-Because a device can have more than one credential, the Issuance step is significant when we issue multiple credentials over the device's lifetime. We recall that our tests used a credential with five attributes and key sizes of 1024 bits.
-
-Finally, the Proving step is expected to be the most commonly performed operation. The fact that it lasts over half a minute implies that we should not use this PoC for \textit{real-time} applications yet. Nevertheless, for many other IoT applications, the fact this operation can be performed multiple times per hour, presents an useful tool for privacy.
+Because a device can have more than one credential, the Issuance step is significant when we issue multiple credentials over the device's lifetime.
+Finally, the Proving step is expected to be the most commonly performed operation. The times obtained are in pair with the tests performed in \cite{D42} for their smart card implementation, where the bottleneck is the copy of group parameters and other data from the IoT smart card to the server. The rest of the time is spent mostly with the cryptographic operations. 
+The fact that it lasts over half a minute implies that we should not use this PoC for \textit{real-time} applications yet. 
+Nevertheless, for many other IoT applications, the fact this operation can be performed multiple times per hour, presents an useful tool for privacy. 
 
 
 \begin{table}[!ht]
 	\begin{center}
 		\begin{tabular}{|r|r|r|r|}
 			\hline
-			System & IoT Smart  & Issue  & Prove Presen-\\
-			Setup & Card Setup & credential & tation Policy\\ \hline
+			System & IoT Smart  & Credential  & Prove Presen-\\
+			Setup & Card Setup & Issuance & tation Policy\\ \hline
 			3.77 s & 19.19 s & 36.48 s & 32.84 s \\ \hline
 		\end{tabular}
 	\end{center}
