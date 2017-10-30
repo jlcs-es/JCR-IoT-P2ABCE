@@ -10,29 +10,26 @@ This section describes the deployment of three testing scenarios: a laptop, a st
 
 \subsection{Testbed description}
 
-First, we shall describe the example Attribute Based Credential system in use. Then, the hardware we will use in our benchmarking.
+%First, we shall describe the example Attribute Based Credential system in use. Then, the hardware we will use in our benchmarking.
 
-\subsubsection{P2ABCE setting}
+%\subsubsection{P2ABCE setting}
 
-To test the correct execution of the \textit{IoT smart card}, we will use the ABC system from the tutorial in the P2ABCE Wiki\footnote{\url{https://github.com/p2abcengine/p2abcengine/wiki/}}. It is based on a soccer club, which wishes to issue VIP-tickets for a match. The VIP-member number in the ticket is inspectable for a lottery, ie. after the game, a random presentation token is inspected and the winning member is notified.
+To verify the correct execution of the \textit{IoT smart card}, the test is based on the ABC system from the tutorial in the P2ABCE Wiki\footnote{\url{https://github.com/p2abcengine/p2abcengine/wiki/}}. It consists on a soccer club, which wishes to issue VIP-tickets for a match. The VIP-member number in the ticket is inspectable for a lottery, ie. after the game, a random presentation token is inspected and the winning member is notified.
 
-First go through the \textbf{setup} phase, where several artifacts are generated and distributed to the various P2ABCE entities. Then a ticket credential containing the following attributes is issued:
-
+First, the \textbf{setup} phase takes place, where several artifacts are generated and distributed to the various P2ABCE entities. Next, a ticket credential containing the following attributes is \textbf{issued}:
 \begin{Verbatim}[fontsize=\footnotesize]
-	First name: John
-	Last name: Dow
-	Birthday: 1985-05-05Z
-	Member number: 23784638726
-	Matchday: 2013-08-07Z
+First name: John	Member number: 23784638726	
+Last name: Dow	  Matchday: 2013-08-07Z
+Birthday: 1985-05-05Z
 \end{Verbatim}
 
-During \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
+%During the \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
 
 Then \textbf{presentation} is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used.
 
 \hfil
 
-\subsubsection{Execution environment}
+%\subsubsection{Execution environment}
 
 First we will execute the test in our development machine (laptop). After asserting that the services work as expected, we then run the test in a Raspberry Pi 3\footnote{\url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}}, exactly like in the laptop. Finally, we will deploy the IoT smart card in an Omega2\footnote{\url{https://docs.onion.io/omega2-docs/omega2.html}} and the delegation services in the Raspberry Pi 3. After every test, we checked that the issuing and proving were successful, in case a cryptographic error appeared in the implementation.
 A downside of using the Omega2 is the lack of hardware acceleration for cryptographic operations, unlike the MULTOS smart cards.
@@ -212,6 +209,8 @@ With all that said, the mean of the maximum memory usage measured is $6569.6$ kb
 
 
 \subsection{Validation conclusions}
+
+% De https://abc4trust.eu/download/D4.2%20Final%20Reference%20Implementation.pdf  página 45 discussion, que si la credencial está cacheada se reducen ciertos tiempos, este es el peor caso
 
 Below \autoref{totaltime} sums up the time in seconds used in each step of the test for the Omega2 scenario.
 
