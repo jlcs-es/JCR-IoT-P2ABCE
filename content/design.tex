@@ -105,7 +105,8 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 	
 	The scheme also shows the \textit{P2ABCE IoT Toolkit}. This piece of software includes the \textit{IoT Smart Card}, and the P2ABCE API.
 	
-	The \textit{IoT Smart Card} is the implementation of a software smart card, which listens for APDU Commands from the secure interface and stores securely the credentials and private keys within the device's memory.
+	The \textit{IoT Smart Card} is the implementation of a software smart card, which listens for APDU Commands from the secure interface and stores the credentials and private keys within the device's memory. 
+	These secret keys should be kept securely protected inside the IoT smart card. There exist different software solutions, as well as hardware, like Atmel's chips, which offer secure memory and cryptographic operations, with serial interfaces for the IoT devices. Those chips also allow to speed up the SHA256 and AES128 calculations when compared with the performance obtained using software implementations.
 	
 	The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process to the server. In the future, for example, the Verification Service could be implemented to run entirely in the IoT device, then the toolkit would conceal the transition from delegation to native execution.
 	
