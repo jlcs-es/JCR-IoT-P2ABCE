@@ -53,6 +53,7 @@ It is worth noting that during the tests, the CPU usage showed that P2ABCE does 
 The IoT device does not intervene in the first step of the testbed, the setup, until the initialization of the new smart card, thus the times measured for each REST call in the second and third scenarios are practically identical as shown in Fig.~\ref{fig:setup:graph}. The laptop is about ten times faster than the Raspberry Pi 3. It is also noticeable that the setup step is only done once, and the highest time measured is less than two and a half seconds.
 
 \begin{figure}[bth]
+	\centering
 	\includegraphics[width=\linewidth]{gfx/graphics/SetupGraphTable}
 	\caption{Setup times (milliseconds) and relative speedup.}
 	\label{fig:setup:graph}
@@ -73,9 +74,8 @@ The creation of a \texttt{SoftwareSmartcard} or a \texttt{HardwareSmartcard}, wh
 
 
 \begin{figure}[bth]
-	\begin{center} 
-		\includegraphics[width=0.6\linewidth]{gfx/graphics/createSCGraph}
-	\end{center} 
+	\centering
+	\includegraphics[width=0.6\linewidth]{gfx/graphics/createSCGraph}
 	\caption{Create smart card times (seconds).} 
 	\label{fig:createSmartCard:graph} 
 \end{figure}
@@ -121,9 +121,8 @@ The three REST calls to the delegation service involved APDU Dialogues with the 
 
 
 \begin{figure}[bth]
-	\begin{center}
-		\includegraphics[width=0.8\linewidth]{gfx/graphics/IssuanceGraphTable}
-	\end{center}
+	\centering
+	\includegraphics[width=0.8\linewidth]{gfx/graphics/IssuanceGraphTable}
 	\caption{Issuance times (milliseconds)}% and relative speedup.}
 	\label{fig:issuance:graph}
 \end{figure}
@@ -158,9 +157,8 @@ The APDU Dialogue involved $28$ APDUs, with $1939$ bytes, about only $27$ms of d
 
 
 \begin{figure}[bth]
-	\begin{center}
-		\includegraphics[width=0.8\linewidth]{gfx/graphics/ProvingGraphTable}
-	\end{center}
+	\centering
+	\includegraphics[width=0.8\linewidth]{gfx/graphics/ProvingGraphTable}
 	\caption{Proving times (milliseconds)}% and relative speedup.}
 	\label{fig:proving:graph}
 \end{figure}
@@ -199,14 +197,13 @@ Nevertheless, for many other IoT applications, the fact this operation can be pe
 
 
 \begin{table}[!ht]
-	\begin{center}
-		\begin{tabular}{|r|r|r|r|}
-			\hline
-			System & IoT Smart  & Credential  & Prove Presen-\\
-			Setup & Card Setup & Issuance & tation Policy\\ \hline
-			3.77 s & 19.19 s & 36.48 s & 32.84 s \\ \hline
-		\end{tabular}
-	\end{center}
+	\centering
+	\begin{tabular}{|r|r|r|r|}
+		\hline
+		System & IoT Smart  & Credential  & Prove Presen-\\
+		Setup & Card Setup & Issuance & tation Policy\\ \hline
+		3.77 s & 19.19 s & 36.48 s & 32.84 s \\ \hline
+	\end{tabular}
 	\caption{Total time spent for each step in the Omega2+RPi3 scenario.}
 	\label{totaltime}
 \end{table}
