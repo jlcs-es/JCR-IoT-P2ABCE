@@ -9,12 +9,12 @@
 	\matrix (m)[matrix of nodes, column  sep=2cm,row  sep=1mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
 		\textbf{Prover} & & \textbf{Verifier}\\[-2mm]
 		$(g,q,y,\alpha)$ & & $(g,q,y)$\\%[-4mm]
-		$r_\alpha \in_R \mathbb{Z}_q$ & & \\%[-8mm]
-		$ t:=g^{r_\alpha} $ & $t$ & \\[-1mm]
+		$r \in_R \mathbb{Z}_q$ & & \\%[-8mm]
+		$ t:=g^{r} $ & $t$ & \\[-1mm]
 		& & $ c \in_R \{0,1\}^{k} $ \\[-4mm]
 		& $c$ & \\[2.5mm]
-		$ s_\alpha := r_\alpha - c\alpha \, mod\, q $ & $s_\alpha$ & \\[-3mm]
-		& & $ t \overset{?}{=} g^{s_\alpha} y^c $ \\
+		$ s := r - c\alpha \, mod\, q $ & $s$ & \\[-3mm]
+		& & $ t \overset{?}{=} g^{s} y^c $ \\
 		\hfil & \hfil & \hfil \\
 	};
 	

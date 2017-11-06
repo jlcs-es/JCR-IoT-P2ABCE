@@ -54,16 +54,16 @@ Using the notation introduced by Camenisch and Stadler \cite{camenisch1997effici
 given a known group $G=\left\langle g \right\rangle $ of prime order $q$ and public value $y\in G$. The notation means: ``I know a secret value $\alpha$ such that $g^\alpha$ is $y$'', i.e. the discrete logarithm of $y$, $log_g y = \alpha$.
 
 
-During the first step of the protocol, the prover chooses randomly a value $r_\alpha$, computes the \textit{commitment} $t := g^{t_\alpha}$ and sends $t$ to the verifier. 
+During the first step of the protocol, the prover chooses randomly a value $r$, computes the \textit{commitment} $t := g^{r}$ and sends $t$ to the verifier. 
 Then, the verifier chooses another random exponent, the \textit{challenge} $c$, and sends it to the prover. 
 Next, the prover computes the \textit{response} $s:=r-c\alpha\, mod\, q$ and sends it to the verifier.
-Finally, the verifier checks whether or not $ t \overset{?}{=} g^{s_\alpha} y^c $ holds. The verifier never receives the secret value $\alpha$, and the verifier will not be able to compute it given $t$ and $s$.
+Finally, the verifier checks whether or not $ t \overset{?}{=} g^{s} y^c $ holds. The verifier never receives the secret value $\alpha$, and the verifier will not be able to compute it given $t$ and $s$.
 
-The protocol holds because $ g^{s_\alpha} y^c  =  g^{r_\alpha - c\alpha} g^{\alpha c} = g^{r_\alpha} = t $.
+The protocol holds because $ g^{s} y^c  =  g^{r - c\alpha} g^{\alpha c} = g^{r} = t $.
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/schnorr}
-	\caption{Schnorr's protocol $PK\{ (\alpha) : y = g^\alpha \}$. The prover knows $(g,q,y,\alpha)$ such that $g^\alpha=y$. The verifier knows $(g,q,y)$.}
+		\caption{Schnorr's protocol $PK\{ (\alpha) : y = g^\alpha \}$. The prover knows $(g,q,y,\alpha)$ such that $g^\alpha=y$. The verifier knows $(g,q,y)$.}
 	\label{fig:schnorr}
 \end{figure}
 
@@ -73,11 +73,11 @@ In Idemix, every ZKP follows the scheme shown above. First, we have the \textit{
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/niZKPnonce}
-	\caption{Identity Mixer's Non-Interactive ZKP with Nonce.}
+		\caption{Identity Mixer's Non-Interactive ZKP with Nonce.}
 	\label{fig:niZKPnonce}
 \end{figure}
 
-Fig. \ref{fig:niZKPnonce} shows the Idemix Proving scheme, where prover and verifier share a context information, the verifier generates the nonce, and the prover, non-interactively, computes the proof. The \texttt{common} values are equivalent to Schnorr's $t$, which was shared between prover and verifier. The verifier can recover some \texttt{\^t}-values from \texttt{common}, \texttt{c} and the \texttt{s}-values. This is equivalent to recovering Schnorr's $t$ from $g^{s_\alpha} y^c$. The verifier then checks whether or not \texttt{c} equals $\mathcal{H}$(...$\mid$\texttt{common}$\mid$\texttt{\^t}$\mid$$n$) to verify if the \texttt{\^t}-values are actually the \texttt{t}-values, making the proof valid.
+Fig. \ref{fig:niZKPnonce} shows the Idemix Proving scheme, where prover and verifier share a context information, the verifier generates the nonce, and the prover, non-interactively, computes the proof. The \texttt{common} values are equivalent to Schnorr's $t$, which was shared between prover and verifier. The verifier can recover some \texttt{\^t}-values from \texttt{common}, \texttt{c} and the \texttt{s}-values. This is equivalent to recovering Schnorr's $t$ from $g^{s} y^c$. The verifier then checks whether or not \texttt{c} equals $\mathcal{H}$(...$\mid$\texttt{common}$\mid$\texttt{\^t}$\mid$$n$) to verify if the \texttt{\^t}-values are actually the \texttt{t}-values, making the proof valid.
 
 
 Therefore, to describe any Idemix proof being performed by the User, one can focus on the key steps, compute the \texttt{t}-values, the challenge \texttt{c} and the \texttt{s}-values, and ignore the mathematical operations performed for each specific ZKP.
@@ -97,9 +97,9 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 
 
 
-\begin{itemize}
-	
-	\item \textbf{IoT device}
+\begin{flushleft}
+	\textbf{IoT device}:
+\end{flushleft}
 	
 	Figure \ref{fig:P2ABCE-IoT} shows our proposed architecture, in which the IoT device is represented with two communication interfaces. One allows external communications to other machines, including other P2ABCE actors. Through this interface, the P2ABCE XML messages are exchanged as in any traditional P2ABCE scenario. This lets an IoT device to interact with other actors without adaptations of the protocol. The other interface allows a secure communication channel with the delegation server. Both the delegation messages and the APDU Dialogue are transmitted over this interface, making it a point of attack that must be thoroughly secured.
 	
@@ -110,20 +110,24 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 	
 	The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process to the server. In the future, for example, the Verification Service could be implemented to run entirely in the IoT device, then the toolkit would conceal the transition from delegation to native execution.
 	
-	
-	\item \textbf{P2ABCE actors}
+\hfil
+
+\begin{flushleft}
+	\textbf{P2ABCE actors}:
+\end{flushleft}
 	
 	The possible roles in a P2ABC system are the Issuer, the User, the Verifier, the Revocation Authority and the Inspector, where these last two actors are optional. All of them use the P2ABCE language to communicate to each other. Any third party actor that communicates with the IoT device will be unaware of the fact that the device is a constrained device, because it will accept and generate the same XML as a traditional User.
 	
 	Figure \ref{fig:actors} showcases the different actors and their interactions, where the User is in the center, which receives a credential from an Issuer, can generate privacy-preserving Tokens for Verifiers or revoke an stolen credential. The Inspector is the only entity capable of reading some ciphered attributes from a Token, if the User accepted to include that ciphered information in it. It serves the Law Enforcement authorities, warrant granted, to track any misuse of a credential.
 	
+\hfil
 	
-	\item \textbf{P2ABCE Delegation Server}
+\begin{flushleft}
+	\textbf{P2ABCE Delegation Server}:
+\end{flushleft}
 	
 	The machine in charge of receiving commands from authorized IoT devices to parse the XML files exchanged. It will also orchestrate through APDU Commands the cryptographic operations the IoT smart card must perform.
 	
-	
-\end{itemize}
 
 \begin{figure}[bth]
 	\centering
