@@ -3,15 +3,10 @@
 
 This section describes the design of our proposal to integrate IoT constrained devices as part of the privacy preserving ecosystem P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User and Verifier roles, interacting autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion, as well as verifying other devices in a M2M environment, addressing the power and memory constrains many IoT devices face. 
 
-Applying Anonymous Credentials Systems in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, controlled access doors where the access control lists (ACLs) are stored in the constrained terminals. A user may present in a M2M fashion a zero-knowledge proof of her being authorized by the list, the terminal then acts as a ACS Verifier to open or not the door. It avoids querying that an external trust party to verify the attributes and gives trust to the administrator that only authorized personnel can enter, and gives trust to the Users that their activity is not stored in clear. 
+Applying Anonymous Credentials Systems in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, controlled access doors where the access control lists (ACLs) are stored in the constrained terminals. A user may present in a M2M fashion a zero-knowledge proof of her being authorized by the list, the terminal then acts as a ACS Verifier to open or not the door. It avoids querying to an external trust party to verify the attributes, gives trust to the administrator that only authorized personnel can enter, and gives trust to the Users that their activity is not stored in clear. 
 
+As another example, a motorcycle could authenticate its owner by verifying a proof from her smart-watch. When parked, it could verify that another device is a policeman's authorized device, and in that case the vehicle would disclose its owner's relevant information, proof of passing technical inspections, etc. But when the vehicle is accessing a restricted residential area, it would provide a proof in a privacy-preserving fashion that its owner's address is within the area, without revealing the owner's identity or specific address where she lives. 
 
-En escenarios donde no hay conexion a internet en una comunicacion M2M se pueda demostrar los atributos para el control de acceso de forma privacy-preserving.
-
-Demonstrar un atributo o varios que se necesiten para ser miembro de una comunidad y acceder a un servicio o dispositivo constrained de esa comunidad.
-
-
-In a more advanced scenario, autonomous IoT devices could interact between them directly. The cryptography of zero-knowledge proofs allows the devices to explicitly conceal sensitive data, and the Verifier devices to trust the proofs. External attackers could not track any activities of the devices. For example, delivery drones authenticating against controlled access doors to open them and leave an expected package, but eavesdroppers would get no information about the delivery.
 
 The project's requirements and objectives are structured below:
 
