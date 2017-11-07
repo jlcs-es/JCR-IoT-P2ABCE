@@ -3,7 +3,9 @@
 
 This section describes the design of our proposal to integrate IoT constrained devices as part of the privacy preserving ecosystem P2ABCE. The ultimate goal is to enable constrained IoT devices to play the Idemix User and Verifier roles, interacting autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion, as well as verifying other devices in a M2M environment, addressing the power and memory constrains many IoT devices face. 
 
-Applications of this technology may be applied in a vast range of IoT scenarios where security and privacy is desired. For example, %door
+Applications of this technology may be applied in a vast range of IoT scenarios where security and privacy is desired. For example, controlled access doors where the access control lists (ACLs) are stored in the terminals. A user may present a zero-knowledge proof of her being authorized by the list, the terminal then acts as a Verifier to open or not the door. This gives trust to the administrator that only authorized personnel can enter, and gives trust to the Users that their activity is not stored in clear. 
+
+In a more advanced scenario, autonomous IoT devices could interact between them directly. The cryptography of zero-knowledge proofs allows the devices acting as Users to explicitly conceal sensitive data, and the Verifier devices to trust the proofs. External attackers could not track any activities of the devices. For example, delivery drones authenticating against controlled access doors to open them and leave an expected package, but eavesdroppers would get no information about the delivery.
 
 The project's requirements and objectives are structured below:
 
