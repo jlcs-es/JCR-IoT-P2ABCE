@@ -1,19 +1,21 @@
 \section{Motivation and requirements}\label{ch:motivation}
 
 %This section describes the design of our proposal to integrate IoT constrained devices as part of the privacy preserving ecosystem P2ABCE. 
-This section describes the goal of the project: enable constrained IoT devices to play the Idemix User and Verifier roles, interacting autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion, as well as verifying other devices in a M2M environment, addressing the power and memory constrains many IoT devices face. 
+The main goal of the research presented in this paper is to enable constrained IoT devices to play the ACS roles of User and Verifier, thereby allowing them to interact autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion. At the same time, the solution allows IoT devices to verify other peer devices in a M2M environment, addressing the power and memory constrains that many kind of IoT devices need to face. 
 
-Applying Anonymous Credentials Systems in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, controlled access doors where the access control lists (ACLs) are stored in the constrained terminals and the access depends on validating a set of attributes, in a privacy preserving way. A user may present in a M2M fashion a zero-knowledge proof of her being authorized by the list, the terminal then acts as a ACS Verifier to open or not the door, based on certain concealed attributes. It avoids querying to an external trust party to verify the attributes, gives trust to the administrator that only authorized personnel can enter, and gives trust to the Users that their activity is not stored in clear.
+Applying ACS in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, in Smart-buildings, controlled access systems like certain chips deployed in doors, where the access control depends on validating a set of attributes in a privacy preserving way, can be benefit from our proposal. An IoT device (e.g. optical head-mounted display (OHMD) acting on behalf of the user may present, in a M2M fashion, a zero-knowledge proof to the terminal that acts as a ACS Verifier to open the door based on certain concealed identity attributes. It avoids querying to an external trust party to verify the attributes, giving trust to the administrator that only authorized personnel can access, whereas providing reliability to the Users that their privacy has not been compromised.
 
-As another example, mobile vehicles, such as a motorcycle, could authenticate its owner by verifying a proof from her smart-watch. When parked, it could verify that another device belongs to an accredited person, such as a policeman, and in that case the vehicle would disclose its owner's relevant information, proof of passing technical inspections, etc. But when the vehicle is accessing a restricted residential area, it would provide a proof in a privacy-preserving fashion that its owner's address is within the area, without revealing the owner's identity or specific address where she lives. This capabilities could be endowed to the vehicles through inexpensive constrained chips with integrated power supply in order to function independently of an engine running, allowing other vehicles as bicycles to benefit from this privacy preserving solution.
+Smart-cities and Mobile scenarios can also benefit from our proposal. Thus, vehicles such as a motorcycles, could authenticate its owner by verifying a proof from her wearables, e.g. an smart-watch. When parked, the bike equipped with our solution could verify that another device trying to interact with it belongs to an accredited person, such as a policeman, and in that case the vehicle would disclose its owner's relevant information, proof of passing technical inspections, etc. But, when the vehicle access to a restricted residential area, it would provide an ACS crypto proof in a privacy-preserving fashion stating that its owner's address is within the area, without revealing any other owner's personal identity (e.g. specific address where she lives). These capabilities could be endowed to the vehicles through inexpensive constrained chips with small batteries in order to function independently of an engine running, allowing other vehicles as bicycles to benefit from this privacy preserving solution.
 
+In general, with our proposal, opportunistic, sporadic and pervasive interactions among disparate IoT constrained and autonomous devices will be achieved in a secure, privacy-preserving and M2M fashion. IoT devices will be able to unveil certain data and offer their IoT services to another IoT constrained devices passing by, as long as they satisfy certain identity attributes demonstrated with their ACS attribute credentials.
 
-The project's requirements and objectives are structured below:
+The requirements of our solution, and therefore or main objectives, are structured below:
 
 \begin{itemize}
-	\item \textit{Security}: the solution should not compromise the security of the device's identities.
+	\item \textit{Security}: the solution should not compromise the security of the device's identities, providing confidentiality and authenticity.
+	\item \textit{Privacy}: the solution should be privacy-preserving, complying with the principle of minimal disclosure of personal information.
 	\item \textit{Usability}: it should provide an API for developers to use the P2ABCE privacy capabilities in their applications.
-	\item \textit{Full P2ABCE support}: the IoT device should be capable of performing every action a traditional User or Verifier could perform.
+	\item \textit{Full P2ABCE support}: the IoT device should be capable of performing every action a traditional ACS roles User or Verifier could perform.
 	\item \textit{Transparent interactions}: any third party actor of the system should not be aware of the IoT condition of the device, therefore, there should be no changes to the P2ABCE protocol.
 	\item \textit{Constrained devices}: the solution should aim to be portable and applicable to as many IoT devices as possible, including those with less computing capabilities.
 \end{itemize}
@@ -29,15 +31,15 @@ The project's requirements and objectives are structured below:
 
 \section{Design of the proposed solution}\label{ch:design}
 
-To address the mentioned objectives, and considering the evolution of Identity Mixer to use smart cards, our solution will consist on a mandatory implementation of the smart card logic inside the IoT device, which will conceal all the operations regarding secret keys, and to manage the P2ABCE language, the solution shall offer an API which, at the time being, will perform \textit{computation offloading} to a device capable of running the framework.
+To address the aforementioned objectives, and considering the evolution of ACS (and in particular Identity Mixer) to use smart cards, our solution consists on a mandatory implementation of the smart card logic inside the IoT device, which will conceal all the operations regarding secret keys, and to manage the P2ABCE language, the solution shall offer an API which, at the time being, will perform \textit{computation offloading} to a device capable of running the framework.
 
-Even in the case all P2ABCE were to be implemented inside an IoT device, it should implement the support for software smart cards, to keep the secret inside the IoT device. Therefore, the first step is to implement the smart card logic inside the IoT device, and later, if the device resources admit it, other components of the P2ABCE framework.
+Even in the case all P2ABCE were to be implemented inside an IoT device, it should implement the support for software smart cards, to keep the secret inside the IoT device. Therefore, the first step is to implement the smart card logic inside the IoT device, and then, if the device resources admit it, other components of the P2ABCE framework.
 
-Computation offloading is not a new technique for IoT environments. For example, to reduce the overhead of IPv6, 6LoWPAN compresses packets and uses smaller address sizes. In order to communicate a 6LoWPAN with other networks, the IoT devices delegate on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart watches can install applications which delegate on the user's phone to accomplish performance demanding task. 
+Computation offloading is not a new technique for IoT environments. For example, to reduce the overhead of IPv6, 6LoWPAN compresses packets and uses smaller address sizes. In order to communicate a 6LoWPAN with other networks, the IoT devices delegate on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart watches can install applications which delegate on the user's phone to accomplish performance demanding task.
+ 
 Therefore, the IoT device now has a \textbf{duality} in its functions, because it is the User that starts any interaction with other actors, and it is also the smart card that a P2ABCE server must ask for cryptographic operations. It can also be seen as a \textbf{double delegation}. The IoT device delegates on the external P2ABCE server to manage the protocol, and that P2ABCE server delegates on the IoT device, acting now as the smart card.
 
 Regarding the communication between different P2ABCE actors, it depends on each IoT scenario, independently of our solution, as third party actors have no need to adapt the P2ABCE protocol.
-
 
 To ensure that our solution does not risk the security of the device's secrets, the next section introduces the fundamentals on the operations performed by a User, therefore identifying the key operations to implement in the smart card.
 
@@ -64,7 +66,7 @@ The protocol holds because $ g^{s} y^c  =  g^{r - c\alpha} g^{\alpha c} = g^{r} 
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/schnorr}
-	\caption{Schnorr's protocol $PK\{ (\alpha) : y = g^\alpha \}$. The prover knows $(g,q,y,\alpha)$ such that $g^\alpha=y$. The verifier knows $(g,q,y)$.}
+		\caption{Schnorr's protocol $PK\{ (\alpha) : y = g^\alpha \}$. The prover knows $(g,q,y,\alpha)$ such that $g^\alpha=y$. The verifier knows $(g,q,y)$.}
 	\label{fig:schnorr}
 \end{figure}
 
@@ -74,7 +76,7 @@ In Idemix, every ZKP follows the scheme shown above. First, we have the \textit{
 
 \begin{figure}[bth]
 	\includegraphics[width=\linewidth]{gfx/niZKPnonce}
-	\caption{Identity Mixer's Non-Interactive ZKP with Nonce.}
+		\caption{Identity Mixer's Non-Interactive ZKP with Nonce.}
 	\label{fig:niZKPnonce}
 \end{figure}
 
@@ -87,7 +89,7 @@ Therefore, to describe any Idemix proof being performed by the User, one can foc
 
 \subsection{System architecture}
 
-The system will be compounded by the IoT device, the P2ABCE delegation server and the third party P2ABCE actors:
+The system is compounded by the IoT device, the P2ABCE delegation server and the third party P2ABCE actors:
 
 \begin{figure*}[htb!]
 	\centering
@@ -101,34 +103,34 @@ The system will be compounded by the IoT device, the P2ABCE delegation server an
 \begin{flushleft}
 	\textbf{IoT device}:
 \end{flushleft}
-
-Figure \ref{fig:P2ABCE-IoT} shows our proposed architecture, in which the IoT device is represented with two communication interfaces. One allows external communications to other machines, including other P2ABCE actors. Through this interface, the P2ABCE XML messages are exchanged as in any traditional P2ABCE scenario. This lets an IoT device to interact with other actors without adaptations of the protocol. The other interface allows a secure communication channel with the delegation server. Both the delegation messages and the APDU Dialogue are transmitted over this interface, making it a point of attack that must be thoroughly secured.
-
-The scheme also shows the \textit{P2ABCE IoT Toolkit}. This piece of software includes the \textit{IoT Smart Card}, and the P2ABCE API.
-
-The \textit{IoT Smart Card} is the implementation of a software smart card, which listens for APDU Commands from the secure interface and stores the credentials and private keys within the device's memory. 
-These secret keys should be kept securely protected inside the IoT smart card. There exist different software solutions, as well as hardware, like Atmel's chips, which offer secure memory and cryptographic operations, with serial interfaces for the IoT devices. Those chips also allow to speed up the SHA256 and AES128 calculations when compared with the performance obtained using software implementations.
-
-The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process to the server. In the future, for example, the Verification Service could be implemented to run entirely in the IoT device, then the toolkit would conceal the transition from delegation to native execution.
-
+	
+	Figure \ref{fig:P2ABCE-IoT} shows our proposed architecture, in which the IoT device is represented with two communication interfaces. One allows external communications to other machines, including other P2ABCE actors. Through this interface, the P2ABCE XML messages are exchanged as in any traditional P2ABCE scenario. This lets an IoT device to interact with other actors without adaptations of the protocol. The other interface allows a secure communication channel with the delegation server. Both, the delegation messages and the APDU Dialogue are transmitted over this interface, making it a point of attack that must be thoroughly secured.
+	
+	The scheme also shows the \textit{P2ABCE IoT Toolkit}. This piece of software includes the \textit{IoT Smart Card}, and the P2ABCE API.
+	
+	The \textit{IoT Smart Card} is the implementation of a software smart card, which listens for APDU Commands from the secure interface and stores the credentials and private keys within the device's memory. 
+	These secret keys should be kept securely protected inside the IoT smart card. There exist different software solutions, as well as hardware, like Atmel's chips, which offer secure memory and cryptographic operations, with serial interfaces for the IoT devices. Those chips also allow to speed up the SHA256 and AES128 calculations when compared with the performance obtained using software implementations.
+	
+	The P2ABCE API is an interface for other processes that wish to use the private-preserving environment of P2ABCE. It provides access to every operation available, hiding the delegation process to the server. In the future, for example, the Verification Service could be implemented to run entirely in the IoT device, then the toolkit would conceal the transition from delegation to native execution.
+	
 \hfil
 
 \begin{flushleft}
 	\textbf{P2ABCE actors}:
 \end{flushleft}
-
-The possible roles in a P2ABC system are the Issuer, the User, the Verifier, the Revocation Authority and the Inspector, where these last two actors are optional. All of them use the P2ABCE language to communicate to each other. Any third party actor that communicates with the IoT device will be unaware of the fact that the device is a constrained device, because it will accept and generate the same XML as a traditional User.
-
-Figure \ref{fig:actors} showcases the different actors and their interactions, where the User is in the center, which receives a credential from an Issuer, can generate privacy-preserving Tokens for Verifiers or revoke an stolen credential. The Inspector is the only entity capable of reading some ciphered attributes from a Token, if the User accepted to include that ciphered information in it. It serves the Law Enforcement authorities, warrant granted, to track any misuse of a credential.
-
+	
+	The possible roles in a P2ABC system are the Issuer, the User, the Verifier, the Revocation Authority and the Inspector, where these last two actors are optional. All of them use the P2ABCE language to communicate to each other. Any third party actor that communicates with the IoT device will be unaware of the fact that the device is a constrained device, because it will accept and generate the same XML as a traditional User.
+	
+	Figure \ref{fig:actors} showcases the different actors and their interactions, where the User is in the center, which receives a credential from an Issuer, can generate privacy-preserving Tokens for Verifiers or revoke an stolen credential. The Inspector is the only entity capable of reading some ciphered attributes from a Token, if the User accepted to include that ciphered information in it. It serves the Law Enforcement authorities, warrant granted, to track any misuse of a credential.
+	
 \hfil
-
+	
 \begin{flushleft}
 	\textbf{P2ABCE Delegation Server}:
 \end{flushleft}
-
-The machine in charge of receiving commands from authorized IoT devices to parse the XML files exchanged. It will also orchestrate through APDU Commands the cryptographic operations the IoT smart card must perform.
-
+	
+	The machine in charge of receiving commands from authorized IoT devices to parse the XML files exchanged. It will also orchestrate through APDU Commands the cryptographic operations the IoT smart card must perform.
+	
 
 \begin{figure}[bth]
 	\centering
@@ -184,7 +186,7 @@ The \textit{Server-IoT} channel must be secured. It must avoid impersonation of 
 %Transmissions over the \textit{Server-IoT} channel must be secured in order to avoid attacks like impersonating the P2ABCE delegation server, an attacker sending APDU Commands to the IoT smart card, or delegating as a device to the server but giving the parameters of another device, making the delegation server send the APDU Commands to a victim IoT smart card.
 
 
-%We could use a corporative PKI to issue certificates to the server and devices and configure policies for access control; design a challenge-response system combined with the smart card PIN, like a password and TOTP\footnote{Time-based One-time Password} in a 2FA\footnote{Two-factor authentication} login. We also could connect physically the delegation service through RS-232 serial to the IoT device, securing both physically as        we      would do with the IoT device on its own, isolating the delegation system from any network attack. % This last idea is an approximation to the Arduino Y\'un\footnote{\url{https://www.arduino.cc/en/Main/ArduinoBoardYun}}, a development board that integrates two microcontrollers, one a typical Arduino with very low resources, and another one running a fork of OpenWrt. The Arduino microcontroller can control the terminal of the more powerful one, using the serial pins as commented before.
+%We could use a corporative PKI to issue certificates to the server and devices and configure policies for access control; design a challenge-response system combined with the smart card PIN, like a password and TOTP\footnote{Time-based One-time Password} in a 2FA\footnote{Two-factor authentication} login. We also could connect physically the delegation service through RS-232 serial to the IoT device, securing both physically as        we      would do with the IoT device on its own, isolating the delegation system from any network attack. % This last idea is an approximation to the Arduino Y\'un\footnote{{https://www.arduino.cc/en/Main/ArduinoBoardYun}}, a development board that integrates two microcontrollers, one a typical Arduino with very low resources, and another one running a fork of OpenWrt. The Arduino microcontroller can control the terminal of the more powerful one, using the serial pins as commented before.
 
 %As      we        can see, there are many state of the art solutions for all this threads, therefore,           we       can assume a secure channel without mentioning a specific solution, providing freedom to choose the most fitting one in a real deployment.
 
