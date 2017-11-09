@@ -184,10 +184,10 @@ These multiple poor uses of memory could be avoided in future versions of the Po
 
 % De https://abc4trust.eu/download/D4.2%20Final%20Reference%20Implementation.pdf  página 45 discussion, que si la credencial está cacheada se reducen ciertos tiempos, este es el peor caso
 
-Below, Table~\ref{totaltime} sums up the time used in each step of the test for the IoT scenario.
+Table~\ref{totaltime} sums up the time used in each step of the test for the IoT scenario.
 The first step, \textit{System Setup} is done only once when the system is being deployed, and the \textit{IoT Smart Card Setup} only once per device.
 Because a device can have more than one credential, the Issuance step is significant when we issue multiple credentials over the device's lifetime.
-Finally, the Proving step is expected to be the most commonly performed operation. The times obtained are in pair with the tests performed in \cite{D42} for their smart card implementation, where the bottleneck is the copy of group parameters and other data from the IoT smart card to the server. The rest of the time is spent mostly with the cryptographic operations. 
+Finally, the Proving step is expected to be the most commonly performed operation. The times obtained basically concur with the tests performed in \cite{D42} for their smart card implementation, where the bottleneck is the copy of group parameters and other data from the IoT smart card to the server. The rest of the time is spent mostly with the cryptographic operations. 
 The fact that it lasts over half a minute implies that we should not use this PoC for \textit{real-time} applications yet. 
 Nevertheless, for many other IoT applications, the fact this operation can be performed multiple times per hour, presents an useful tool for privacy. 
 
