@@ -14,7 +14,7 @@ This section describes the deployment of three testing scenarios with different 
 
 %\subsubsection{P2ABCE setting}
 
-To verify the correct execution of the \textit{IoT smart card}, the test is based on the ABC system from the tutorial in the P2ABCE Wiki\footnote{{https://github.com/p2abcengine/p2abcengine/wiki/}}. It consists on a soccer club, which wishes to issue VIP-tickets for a match. The VIP-member number in the ticket is inspectable for a lottery, ie. after the game, a random presentation token is inspected and the winning member is notified.
+To verify the correct execution of the \textit{IoT smart card}, the test is based on the ABC system from the tutorial in the P2ABCE Wiki\footnote{{https://github.com/p2abcengine/p2abcengine/wiki/}}.  It consists in a scenario with a soccer club, which wishes to issue VIP-tickets for a match. The VIP-member number in the ticket is inspectable for a lottery, ie. after the game, a random presentation token is inspected and the winning member is notified.
 
 First, the \textbf{setup} phase takes place, where several artifacts are generated and distributed to the various P2ABCE entities. Next, a ticket credential containing the following attributes is \textbf{issued}:
 \begin{Verbatim}[fontsize=\footnotesize]
@@ -25,7 +25,7 @@ Birthday: 1985-05-05Z
 
 %During the \textbf{issuance}, a \textit{scope exclusive pseudonym} is established and the newly issued credential is bound to this pseudonym. This ensures that the ticket credential can not be used without the smart card.
 
-Then a \textbf{presentation} is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate which ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used. The policy also includes the nonce value for the proof's challenge.
+Then a \textbf{presentation} phase is performed, where a \textit{presentation policy} from the verifier specifies that the member number is inspectable and a predicate which ensures that the matchday is in fact $2013-08-07Z$. This last part ensures that a ticket issued for another match can not be used. The policy also includes the nonce value for the proof's challenge.
 
 \hfil
 
@@ -55,7 +55,7 @@ The IoT device does not intervene in the first step of the testbed, the setup, u
 \begin{figure}[bth]
 	\centering
 	\includegraphics[width=\linewidth]{gfx/graphics/SetupGraphTable}
-	\caption{Setup times (milliseconds) and relative speedup.}
+	\caption{Setup times (milliseconds) and relative speedup between Laptop and RPi3.}
 	\label{fig:setup:graph}
 \end{figure}
 

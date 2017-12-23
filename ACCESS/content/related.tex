@@ -41,7 +41,7 @@ the cryptographic bases for signature schemes and anonymous credentials that lat
 Luuk Danes in 2007 studied theoretically how Idemix's User role could be implemented using  
 smart cards \cite{luuk}, identifying what data and operations should be kept inside the device to perform different levels of security. The User role was divided between the smart card, holding secret keys, and the Idemix terminal, that commanded operations inside the smart card, or read the keys in it to perform the instructions itself. The studied sets were a combination of possibilities where the smart card would give all the information to the terminal, only partial information, or keep everything secret and perform all the private operations within itself.
 
-Later, in 2008 V\'ictor Sucasas also studied an anonymous credential system with smart card support \cite{sucasas}, equivalent to a basic version of Idemix, using a simulator to test the PoC and pointing out some crucial implementation details for performance. The researching tendency starts to show that smart cards are the best solution to hold safely the User's credentials.
+Later, in 2008 V\'ictor Sucasas also studied an anonymous credential system with smart card support \cite{sucasas}, equivalent to a basic version of Idemix, using a simulator to test the PoC and pointing out some crucial implementation details for performance.
 
 In 2009, some Java smart card PoC for Idemix were developed in \cite{javaIdemix1} and \cite{javaIdemix2}, but they weren't optimal and didn't include some Idemix's functionalities, like selective disclosure.
 

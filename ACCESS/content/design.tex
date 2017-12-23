@@ -3,9 +3,9 @@
 %This section describes the design of our proposal to integrate IoT constrained devices as part of the privacy preserving ecosystem P2ABCE. 
 The main goal of the research presented in this paper is to enable constrained IoT devices to play the ACS roles of User and Verifier, thereby allowing them to interact autonomously in order to authenticate and demonstrate their credential attributes to any Verifier in a privacy-preserving fashion. At the same time, the solution allows IoT devices to verify other peer devices in a M2M environment, addressing the power and memory constrains that many kind of IoT devices need to face. 
 
-Applying ACS in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, in Smart-buildings, controlled access systems like certain chips deployed in doors, where the access control depends on validating a set of attributes in a privacy preserving way, can be benefit from our proposal. An IoT device (e.g. optical head-mounted display (OHMD) acting on behalf of the user may present, in a M2M fashion, a zero-knowledge proof to the terminal that acts as a ACS Verifier to open the door based on certain concealed identity attributes. It avoids querying to an external trust party to verify the attributes, giving trust to the administrator that only authorized personnel can access, whereas providing reliability to the Users that their privacy has not been compromised.
+Applying ACS in IoT constrained devices enables a new vast range of opportunities and scenarios that have not being addressed so far. For example, in Smart-buildings, controlled access systems like certain chips deployed in doors, where the access control depends on validating a set of attributes in a privacy preserving way, can be benefit from our proposal. An IoT device (e.g. optical head-mounted display (OHMD)) acting on behalf of the user may present, in a M2M fashion, a zero-knowledge proof to the terminal that acts as an ACS Verifier to open the door based on certain concealed identity attributes. It avoids querying to an external trust party to verify the attributes, giving trust to the administrator that only authorized personnel can access, whereas providing reliability to the Users that their privacy has not been compromised.
 
-Smart-cities and Mobile scenarios can also benefit from our proposal. Thus, vehicles such as a motorcycles, could authenticate its owner by verifying a proof from her wearables, e.g. an smart-watch. When parked, the bike equipped with our solution could verify that another device trying to interact with it belongs to an accredited person, such as a policeman, and in that case the vehicle would disclose its owner's relevant information, proof of passing technical inspections, etc. But, when the vehicle access to a restricted residential area, it would provide an ACS crypto proof in a privacy-preserving fashion stating that its owner's address is within the area, without revealing any other owner's personal identity (e.g. specific address where she lives). These capabilities could be endowed to the vehicles through inexpensive constrained chips with small batteries in order to function independently of an engine running, allowing other vehicles as bicycles to benefit from this privacy preserving solution.
+Smart-cities and Mobile scenarios can also benefit from our proposal. Thus, vehicles such as a motorcycles, could authenticate its owner by verifying a proof from her wearables, e.g. a smart-watch. When parked, the bike equipped with our solution could verify that another device trying to interact with it belongs to an accredited person, such as a policeman, and in that case the vehicle would disclose its owner's relevant information, proof of passing technical inspections, etc. But, when the vehicle access to a restricted residential area, it would provide an ACS crypto proof in a privacy-preserving fashion stating that its owner's address is within the area, without revealing any other owner's personal identity (e.g. specific address where she lives). These capabilities could be endowed to the vehicles through inexpensive constrained chips with small batteries in order to function independently of an engine running, allowing other vehicles as bicycles to benefit from this privacy preserving solution.
 
 In general, with our proposal, opportunistic, sporadic and pervasive interactions among disparate IoT constrained and autonomous devices will be achieved in a secure, privacy-preserving and M2M fashion. IoT devices will be able to unveil certain data and offer their IoT services to another IoT constrained devices passing by, as long as they satisfy certain identity attributes demonstrated with their ACS attribute credentials.
 
@@ -33,7 +33,7 @@ The requirements of our solution, and therefore or main objectives, are structur
 
 To address the aforementioned objectives, and considering the evolution of ACS (and in particular Identity Mixer) to use smart cards, our solution consists on a mandatory implementation of the smart card logic inside the IoT device, which will conceal all the operations regarding secret keys, and to manage the P2ABCE language, the solution shall offer an API which, at the time being, will perform \textit{computation offloading} to a device capable of running the framework.
 
-Even in the case all P2ABCE were to be implemented inside an IoT device, it should implement the support for software smart cards, to keep the secret inside the IoT device. Therefore, the first step is to implement the smart card logic inside the IoT device, and then, if the device resources admit it, other components of the P2ABCE framework.
+Even in the case the whole P2ABCE protocol were to be implemented inside an IoT device, it should implement the support for software smart cards, to keep the secret inside the IoT device. Therefore, the first step is to implement the smart card logic inside the IoT device, and then, if the device resources admit it, other components of the P2ABCE framework.
 
 Computation offloading is not a new technique for IoT environments. For example, to reduce the overhead of IPv6, 6LoWPAN compresses packets and uses smaller address sizes. In order to communicate a 6LoWPAN with other networks, the IoT devices delegate on a proxy that can manage the 6LoWPAN and IPv6 stacks. In the scope of consumer devices, smart watches can install applications which delegate on the user's phone to accomplish performance demanding task.
  
@@ -121,7 +121,7 @@ The system is compounded by the IoT device, the P2ABCE delegation server and the
 	
 	The possible roles in a P2ABC system are the Issuer, the User, the Verifier, the Revocation Authority and the Inspector, where these last two actors are optional. All of them use the P2ABCE language to communicate to each other. Any third party actor that communicates with the IoT device will be unaware of the fact that the device is a constrained device, because it will accept and generate the same XML as a traditional User.
 	
-	Figure \ref{fig:actors} showcases the different actors and their interactions, where the User is in the center, which receives a credential from an Issuer, can generate privacy-preserving Tokens for Verifiers or revoke an stolen credential. The Inspector is the only entity capable of reading some ciphered attributes from a Token, if the User accepted to include that ciphered information in it. It serves the Law Enforcement authorities, warrant granted, to track any misuse of a credential.
+	Figure \ref{fig:actors} showcases the different actors and their interactions, where the User is in the center, which receives a credential from an Issuer, can generate privacy-preserving Tokens for Verifiers or revoke a stolen credential. The Inspector is the only entity capable of reading some ciphered attributes from a Token, if the User accepted to include that ciphered information in it. It serves the Law Enforcement authorities, warrant granted, to track any misuse of a credential.
 	
 \hfil
 	
@@ -142,33 +142,33 @@ The system is compounded by the IoT device, the P2ABCE delegation server and the
 
 \subsection{Delegation process}
 
-This section describes the computation offloading carried out by the IoT device. The steps the device will perform in any kind of interaction are:
+This section describes the computation offloading carried out by the IoT device. The steps the IoT device will perform in any kind of interaction are:
 
 \begin{itemize}
 	\item Communication with P2ABCE actor
 	
-	The IoT device, acting as a User, starts an interaction with another actor. If it is an Issuer, it will start the issuance process. If it is a Verifier, then it will provide a Presentation Policy for the device to proof in a privacy preserving way. Figure~\ref{fig:DelegationProving} shows an example of this last case.
+	The IoT device, acting as a User, starts an interaction with another P2ABCE actor. If it is an Issuer, it will start the issuance process. If it is a Verifier, then it will provide a Presentation Policy for the IoT device to proof in a privacy preserving way. Figure~\ref{fig:DelegationProving} shows an example of this last case.
 	
-	It may also happen that the device is contacted as a Verifier by another actor, e.g. in a M2M scenario where the IoT device requires authentication to access to its resources.
+	It may also happen that the IoT device is contacted by another actor in order to act as a Verifier, e.g. in a M2M scenario where the IoT device requires authentication to access to its resources.
 	
 	\item Delegation to the P2ABCE Server
 	
-	Depending on what role the IoT device is acting as, it will use the corresponding API from the P2ABCE IoT Toolkit. The selected API will delegate to the Service deployed in the delegation server, e.g. User Service. The delegation message will include the XML data, and any parameter required to accomplish the task, as the information on how to communicate back with the IoT smart card.
+	Depending on what role the IoT device is acting as, it will use the corresponding API from the P2ABCE IoT Toolkit. The selected API will delegate to the delegation service deployed in the delegation server, e.g. User Service. The delegation message will include the XML data, and any parameter required to accomplish the task, as the information on how to communicate back with the IoT smart card.
 	
-	The server will then parse the XML messages and begin to orchestrate the response. In the case of the Verifier Service, it will answer immediately with an \textit{accept} or \textit{reject} of the Token. In case it is the User Service, it will need information from the IoT credentials and cryptographic operations.
+	The delegation server will then parse the XML messages and begin to orchestrate the response. In the case of the Verifier Service, it will answer immediately with an \textit{accept} or \textit{reject} of the Token. In case it is the User Service, it will need information from the IoT credentials and cryptographic operations, performed in the IoT smart card.
 	
 	\item APDU Dialogue
 	
-	Through the secure channel between IoT device and server, the User Service will send APDU Commands to the  \textit{IoT smart card} to read the credential information or perform cryptographic operations involving private keys, necessarily stored inside the IoT device.
+	Through the secure channel between IoT device and delegation server, the User Service in the delegation server will send APDU Commands to the  \textit{IoT smart card} to read the credential information or perform cryptographic operations involving private keys, necessarily stored inside the IoT device.
 	
-	During a proof, the Service will read the credential public information to fill the Presentation Token, and then will request the IoT smart card to calculate the \texttt{t}-values of the proof. The Service will read the \texttt{common} and \texttt{t}-values, use the nonce present in the Presentation Policy of the Verifier and compute the challenge \texttt{c}. Next, the Service will send \texttt{c} to the IoT smart card through another APDU Command to request the calculation of the \texttt{s}-values.
+	During a proof, the delegation service will request from the IoT smart card the credential public information to fill the Presentation Token, and then will request the IoT smart card to calculate the \texttt{t}-values of the proof. The delegation service will request the \texttt{common} and \texttt{t}-values, use the nonce present in the Presentation Policy of the Verifier and compute the challenge \texttt{c}. Next, the delegation service will send \texttt{c} to the IoT smart card through another APDU Command to request the calculation of the \texttt{s}-values.
 	
-	After the APDU Dialogue, the Service has all the needed values to fill in the Token, and the IoT device performed all the operations involving private values on its own.
+	After the APDU Dialogue, the Service has all the needed values to fill in the Token, but the IoT device performed all the operations involving private values on its own.
 	
 	
 	\item Server response
 	
-	After the APDU Dialogue, if needed, the server may return a status code indicating success or failure, or a XML response if the third party actor requires an answer from the IoT device, as a Presentation Token, or the intermediate issuance messages.
+	After the APDU Dialogue, if needed, the delegation server may return a status code indicating success or failure, or a XML response if the third party actor requires an answer from the IoT device, as a Presentation Token, or the intermediate issuance messages.
 	
 \end{itemize}
 
