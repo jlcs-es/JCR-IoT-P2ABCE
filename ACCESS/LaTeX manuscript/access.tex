@@ -1,0 +1,80 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+
+\usepackage{fancyvrb}
+%\usepackage{caption}
+\usepackage[utf8]{inputenc}
+
+\pdfminorversion=4
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
+\doi{10.1109/ACCESS.2017.DOI}
+
+\title{Integration of Anonymous Credential Systems in IoT constrained environments}
+\author{\uppercase{Jose Luis Canovas Sanchez},
+\uppercase{Jorge Bernal Bernabe, and Antonio F. Skarmeta}
+}
+\address{Department of Information and Communications Engineering\\
+	Computer Science Faculty, 
+	University of Murcia, Spain\\
+	\{joseluiscanovas, jorgebernal, skarmeta\}@um.es\\
+}
+%\address[1]{National Institute of Standards and 
+%Technology, Boulder, CO 80305 USA (e-mail: author@boulder.nist.gov)}
+%\address[2]{Department of Physics, Colorado State University, Fort Collins, 
+%CO 80523 USA (e-mail: author@lamar.colostate.edu)}
+%\address[3]{Electrical Engineering Department, University of Colorado, Boulder, CO 
+%80309 USA}
+\tfootnote{This work has received funding from IBM 2015 Faculty Award for Cyber Security and the European Union’s Horizon 2020 research and innovation programme under grant agreement No 700085 (ARIES project).}
+
+\markboth
+{Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
+{Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
+
+%\corresp{Corresponding author: First A. Author (e-mail: author@ boulder.nist.gov).}
+
+\begin{abstract}
+The pervasive nature of Internet of Things entails additional threats that compromise the security and privacy of IoT devices and, eventually, the users. This issue is aggravated in constrained IoT devices equipped with minimal hardware resources. Current security and privacy implementations need to be re-designed and implemented maintaining its Level of Assurance (LoA), aiming for this family of devices. To cope with this issue, this paper proposes the first novel attempt to leverage Anonymous Credential Systems (ACS) to preserve the privacy of autonomous IoT constrained devices. Concretely, we have designed a solution to integrate IBM's Identity Mixer into constrained IoT ecosystems, endowing the IoT with ACS's privacy-preserving capabilities. The solution has been designed, implemented and evaluated proving its feasibility.
+\end{abstract}
+
+\begin{keywords}
+Anonymous credential system, Identity Mixer, Internet of Things, Zero-knowledge proof
+\end{keywords}
+
+\titlepgskip=-15pt
+
+\maketitle
+
+
+\input{content/introduction.tex}
+
+
+\input{content/related.tex}
+
+
+\input{content/design.tex}
+
+
+\input{content/PoC.tex}
+
+
+\input{content/validation.tex}
+
+
+\input{content/conclusions.tex}
+
+
+\bibliography{Bibliography}
+\bibliographystyle{plain}
+
+
+\EOD
+
+\end{document}
